@@ -1,0 +1,6 @@
+C:\Code\parallel_programming_3\parallel_programming_3\obj\Debug\parallel_programming_3.csprojResolveAssemblyReference.cache
+C:\Code\parallel_programming_3\parallel_programming_3\bin\Debug\parallel_programming_3.exe.config
+C:\Code\parallel_programming_3\parallel_programming_3\bin\Debug\parallel_programming_3.exe
+C:\Code\parallel_programming_3\parallel_programming_3\bin\Debug\parallel_programming_3.pdb
+C:\Code\parallel_programming_3\parallel_programming_3\obj\Debug\parallel_programming_3.exe
+C:\Code\parallel_programming_3\parallel_programming_3\obj\Debug\parallel_programming_3.pdb
