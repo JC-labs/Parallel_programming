@@ -1,0 +1,147 @@
+GNAT 5.1.0
+Copyright 1992-2015, Free Software Foundation, Inc.
+
+Compiling: math.adb
+Source file time stamp: 2017-09-13 22:04:04
+Compiled at: 2017-09-14 08:33:41
+
+     1. with ada.text_io;
+     2. package body math is 
+     3. 	package integer_io is new ada.text_io.integer_io(positive);
+     4. 	package float_io is new ada.text_io.float_io(float);
+     5. 	function get_vector return vector is
+     6. 		ret : vector;
+     7. 	begin
+     8. 		ada.text_io.put("Input ");
+     9. 		integer_io.put(size);
+    10. 		ada.text_io.put_line(" floats for the a vector:");
+    11. 		for i in 1..size loop
+    12. 			ret(i) := float'value(ada.text_io.get_line);
+    13. 		end loop;
+    14. 		return ret;
+    15. 	end;	
+    16. 	function get_matrix return matrix is
+    17. 		ret : matrix;
+    18. 	begin
+    19. 		ada.text_io.put("Input ");
+    20. 		integer_io.put(size);
+    21. 		ada.text_io.put("x");
+    22. 		integer_io.put(size);
+    23. 		ada.text_io.put_line(" floats for the a matrix:");
+    24. 		for i in 1..size loop
+    25. 			for j in 1..size loop
+    26. 				ret(i, j) := float'value(ada.text_io.get_line);
+    27. 			end loop;
+    28. 		end loop;
+    29. 		return ret;
+    30. 	end;
+    31. 	
+    32. 	function sort(v : in vector) return vector is
+    33. 		t : float;
+    34. 		r : vector;
+    35. 	begin
+    36. 		r := v;
+    37. 		for i in 1..size loop
+    38. 			for j in i..size loop
+    39. 				if r(i) > r(j) then
+    40. 					t := r(j);
+    41. 					r(j) := r(i);
+    42. 					r(i) := t;
+    43. 				end if;
+    44. 			end loop;
+    45. 		end loop;
+    46. 		return r;
+    47. 	end sort;
+    48. 	
+    49. 	function "*"(m1, m2 : in matrix) return matrix is
+    50. 		ret : matrix;
+    51. 	begin
+    52. 		for i in 1..size loop
+    53. 			for j in 1..size loop
+    54. 				ret(i, j) := 0.0;
+    55. 				for k in 1..size loop
+    56. 					ret(i, j) := ret(i, j) + m1(i, k) * m2(k, j);
+    57. 				end loop;
+    58. 			end loop;
+    59. 		end loop;
+    60. 		return ret;
+    61. 	end "*";
+    62. 	function "*"(v : in vector; m : in matrix) return vector is
+    63. 	ret : vector;
+    64. 	begin
+    65. 		for i in 1..size loop
+    66. 			ret(i) := 0.0;
+    67. 			for j in 1..size loop
+    68. 				ret(i) := ret(i) + m(i, j) * v(i);
+    69. 			end loop;
+    70. 		end loop;
+    71. 		return ret;
+    72. 	end "*";
+    73. 	function "+"(v1, v2 : in vector) return vector is
+    74. 		ret : vector;
+    75. 	begin
+    76. 		for i in 1..size loop
+    77. 			ret(i) := v1(i) + v2(i);
+    78. 		end loop;
+    79. 		return ret;
+    80. 	end "+";
+    81. 		
+    82. 	procedure put_vector(v : in vector) is
+    83. 	begin
+    84. 		ada.text_io.put_line("Resulting vector is ");
+    85. 		for i in 1..size loop
+    86. 			float_io.put(v(i));
+    87. 		end loop;
+    88. 		ada.text_io.put_line("");
+    89. 	end put_vector;
+    90. 	
+    91. 	function transpose(m : in matrix) return matrix is
+    92. 		ret : matrix;
+    93. 	begin
+    94. 		for i in 1..size loop
+    95. 			for j in i..size loop
+    96. 				ret(i, j) := m(j, i);
+    97. 				ret(j, i) := m(i, j);
+    98. 			end loop;
+    99. 		end loop;
+   100. 		return ret;
+   101. 	end transpose;
+   102. 	
+   103. 	procedure put_matrix(m : in matrix) is
+   104. 	begin
+   105. 		ada.text_io.put_line("Resulting matrix is ");
+   106. 		for i in 1..size loop
+   107. 			for j in 1..size loop
+   108. 				float_io.put(m(i, j));
+   109. 			end loop;
+   110. 			ada.text_io.put_line("");
+   111. 		end loop;
+   112. 	end put_matrix;
+   113. 	
+   114. end math;
+
+Compiling: math.ads
+Source file time stamp: 2017-09-13 21:52:26
+Compiled at: 2017-09-14 08:33:41
+
+     1. with ada.containers.generic_array_sort;
+     2. generic
+     3. 	size : positive;
+     4. package math is
+     5. 	type vector is private;
+     6. 	type matrix is private;
+     7. 	function get_matrix return matrix;
+     8. 	function get_vector return vector;
+     9. 	function sort(v : in vector) return vector;
+    10. 	function "*"(m1, m2 : in matrix) return matrix;
+    11. 	function "*"(v : in vector; m : in matrix) return vector;
+    12. 	function "+"(v1, v2 : in vector) return vector;
+    13. 	procedure put_vector(v : in vector);
+    14. 	function transpose(m : in matrix) return matrix;
+    15. 	procedure put_matrix(m : in matrix);
+    16. private
+    17. 	type vector is array(1..size) of float;
+    18. 	type matrix is array(1..size, 1..size) of float;
+    19. end math;
+
+ 114 lines: No errors

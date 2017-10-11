@@ -1,0 +1,162 @@
+V "GNAT Lib v6"
+M P W=b
+P SS ZX
+
+RN
+RV NO_DELAY
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTIONS
+RV NO_FIXED_POINT
+RV NO_FLOATING_POINT
+RV NO_IO
+RV NO_IMPLICIT_DYNAMIC_CODE
+RV NO_RELATIVE_DELAY
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_TASK_HIERARCHY
+RV NO_TASKING
+RV STATIC_STORAGE_SIZE
+RV NO_DEFAULT_INITIALIZATION
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV SPARK_05
+RV MAX_TASKS=1+
+
+U l1%b			l1.adb			7018ffe5 NE OO SU IL
+W ada%s			ada.ads			ada.ali
+W ada.calendar.delays%s	a-caldel.adb		a-caldel.ali
+Z ada.containers%s	a-contai.ads		a-contai.ali
+Z ada.containers.generic_array_sort%s
+W ada.exceptions%s	a-except.adb		a-except.ali
+W ada.real_time%s	a-reatim.adb		a-reatim.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+Z ada.text_io.float_aux%s  a-tiflau.adb		a-tiflau.ali
+W ada.text_io.float_io%s
+Z ada.text_io.integer_aux%s  a-tiinau.adb	a-tiinau.ali
+W ada.text_io.integer_io%s
+W math%s		math.adb		math.ali
+W system%s		system.ads		system.ali
+W system.fat_flt%s	s-fatflt.ads		s-fatflt.ali
+W system.multiprocessors%s  s-multip.adb	s-multip.ali
+W system.parameters%s	s-parame.adb		s-parame.ali
+W system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+W system.soft_links%s	s-soflin.adb		s-soflin.ali
+W system.task_info%s	s-tasinf.adb		s-tasinf.ali
+W system.tasking%s	s-taskin.adb		s-taskin.ali
+W system.tasking.stages%s  s-tassta.adb		s-tassta.ali
+W system.val_int%s	s-valint.adb		s-valint.ali
+W system.val_real%s	s-valrea.adb		s-valrea.ali
+
+D ada.ads		20070406091342 3ffc8e18 ada%s
+D a-calend.ads		20141120112812 d986d312 ada.calendar%s
+D a-caldel.ads		20140120152337 9f20b83d ada.calendar.delays%s
+D a-contai.ads		20151020122137 61e5e089 ada.containers%s
+D a-cgarso.ads		20070406091342 9129bfa8 ada.containers.generic_array_sort%s
+D a-except.ads		20151016123252 291912d5 ada.exceptions%s
+D a-ioexce.ads		20140225151544 e4a01f64 ada.io_exceptions%s
+D a-reatim.ads		20151026154432 428ef5f7 ada.real_time%s
+D a-stream.ads		20141120112812 119b8fb3 ada.streams%s
+D a-tags.ads		20151016130316 01f5e3ef ada.tags%s
+D a-textio.ads		20140717063745 386df5d4 ada.text_io%s
+D a-tiflau.ads		20090409150019 c0393f21 ada.text_io.float_aux%s
+D a-tiflio.ads		20140717063513 56fbda09 ada.text_io.float_io%s
+D a-tiflio.adb		20090409150019 fd9b1cfc ada.text_io.float_io%b
+D a-tiinau.ads		20090409150019 8114c8e4 ada.text_io.integer_aux%s
+D a-tiinio.ads		20140717063513 aa04e5d6 ada.text_io.integer_io%s
+D a-tiinio.adb		20091130162119 df9cd7af ada.text_io.integer_io%b
+D a-unccon.ads		20070406091342 f9eb8f06 ada.unchecked_conversion%s
+D interfac.ads		20151118101227 4be8ce1b interfaces%s
+D i-c.ads		20110801143639 5421119b interfaces.c%s
+D i-cstrea.ads		20140801100435 e53d8b8e interfaces.c_streams%s
+D l1.adb		20170920210151 6f2b1a4a l1%b
+D math.ads		20170914083431 1ff28f08 math%s
+D math.adb		20170920205525 a74fd7b0 math%b
+D system.ads		20151123113124 6326c08a system%s
+D s-atacco.ads		20120515093410 4c36d12f system.address_to_access_conversions%s
+D s-crtl.ads		20141120112812 0ebbdb71 system.crtl%s
+D s-exctab.ads		20140225151139 54135002 system.exception_table%s
+D s-fatflt.ads		20090409150019 11beb392 system.fat_flt%s
+D s-fatgen.ads		20150107111315 49cbaf86 system.fat_gen%s
+D s-ficobl.ads		20140718105747 078245e4 system.file_control_block%s
+D s-linux.ads		20150107101203 2fda6ad1 system.linux%s
+D s-multip.ads		20101011073009 38ac9f73 system.multiprocessors%s
+D s-oscons.ads		20170407122156 4bd50652 system.os_constants%s
+D s-osinte.ads		20151016132500 64f6e3c7 system.os_interface%s
+D s-parame.ads		20140801093848 7e2a0d7f system.parameters%s
+D s-secsta.ads		20140225151139 86a2856d system.secondary_stack%s
+D s-soflin.ads		20151020124036 14e1eb6c system.soft_links%s
+D s-stache.ads		20140225151139 a37c21ec system.stack_checking%s
+D s-stausa.ads		20110804134155 017a0a05 system.stack_usage%s
+D s-stalib.ads		20151112104907 09bd3940 system.standard_library%s
+D s-stoele.ads		20140225151139 2dc34a04 system.storage_elements%s
+D s-tasinf.ads		20140613095942 2b3f8252 system.task_info%s
+D s-taspri.ads		20141120144719 e3ab4429 system.task_primitives%s
+D s-taprop.ads		20140521131406 1dd2e1b6 system.task_primitives.operations%s
+D s-taskin.ads		20151023124846 0766baa7 system.tasking%s
+D s-tassta.ads		20121029110946 70812003 system.tasking.stages%s
+D s-traent.ads		20140730135025 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20140731130224 9d58a4c0 system.unsigned_types%s
+D s-valint.ads		20090409150019 48a52a3f system.val_int%s
+D s-valrea.ads		20150106102044 fe297711 system.val_real%s
+D s-wchcon.ads		20140718092328 1b7d22d2 system.wch_con%s
+X 1 ada.ads
+16K9*Ada 19e8 22|12r6 14r35 47r25 59r33 62r25 71r25 82r33 85r25 95r25 107r33
+. 110r25 117r9 118r30 119r9 120r30 121r9 122r30
+X 11 a-textio.ads
+49K13*Text_IO 471e16 22|12w10 14r39 47r29 59r37 62r29 71r29 82r37 85r29 95r29
+. 107r37 110r29 117r13 118r34 119r13 120r34 121r13 122r34
+242U14*Put 22|59s45 82s45 107s45 117s21 119s21 121s21
+256V13*Get_Line{string} 22|118s42 120s42 122s42
+263U14*Put_Line 22|47s37 62s37 71s37 85s37 95s37 110s37
+X 16 a-tiinio.ads
+46k21*Integer_IO 85e27 22|14r47
+X 22 l1.adb
+13U11*l1 13b11 124l5 124t7
+14K17 integer_io[16|46]
+16i9 n1{positive} 40r57 58r28 81r28 106r28 118m9
+16i13 n2{positive} 65r57 120m9
+16i17 n3{positive} 88r57 122m9
+17U19 tasks 17b19 114l13 114t18 123s9
+18i17 defalut_storage_size{positive} 23r45 29r45 35r45
+20t22 t1 39b27 63l21 63t23
+26t22 t2 64b27 86l21 86t23
+32t22 t3 87b27 111l21 111t23
+40K33 mathematics[23|11] 40r66
+41a25 a{23|12A14[40]} 48m25 55r33
+42a25 b{23|12A14[40]} 49m25 55r36
+43a25 c{23|12A14[40]} 55m25 60r44
+44a25 ma{23|13A14[40]} 50m25 55r39
+45a25 me{23|13A14[40]} 51m25 55r43
+65K33 mathematics[23|11] 65r66
+66a25 mk{23|13A14[65]} 72m25 78r34
+67a25 mh{23|13A14[65]} 73m25 78r38
+68a25 mf{23|13A14[65]} 74m25 78r42
+69a25 mg{23|13A14[65]} 78m25 83r44
+88K33 mathematics[23|11] 88r66
+89a25 r{23|12A14[88]} 96m25 103r33
+90a25 s{23|12A14[88]} 97m25 103r36
+91a25 o{23|12A14[88]} 103m25 108r44
+92a25 mt{23|13A14[88]} 98m25 103r39
+93a25 mp{23|13A14[88]} 99m25 103r43
+X 23 math.ads
+11k9*math 22|12w43 40r52 65r52 88r52 23|33e9
+12A14 vector(float) 22|41r29[40] 42r29[40] 43r29[40] 89r29[88] 90r29[88]
+. 91r29[88]
+13A14 matrix(float) 22|44r30[40] 45r30[40] 66r30[65] 67r30[65] 68r30[65]
+. 69r30[65] 92r30[88] 93r30[88]
+16V18 fill_matrix{13A14[22|40]} 22|50s31[40] 51s31[40] 72s31[65] 73s31[65]
+. 74s31[65] 98s31[88] 99s31[88]
+17V18 fill_vector{12A14[22|40]} 22|48s30[40] 49s30[40] 96s30[88] 97s30[88]
+18U19 put_vector 22|60s33[40] 108s33[88]
+19U19 put_matrix 22|83s33[65]
+21V18 f1{12A14[22|40]} 22|55s30[40]
+22V18 f2{13A14[22|65]} 22|78s31[65]
+23V18 f3{12A14[22|88]} 22|103s30[88]
+X 25 system.ads
+37K9*System 22|12r19 25|156e11
+X 33 s-multip.ads
+16K16*Multiprocessors 22|12w26 33|28e27
+X 40 s-stausa.ads
+203U14*Initialize 204i<c,__gnat_stack_usage_initialize>22
+268U14*Output_Results 272i<c,__gnat_stack_usage_output_results>22
+

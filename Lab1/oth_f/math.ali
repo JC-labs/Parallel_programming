@@ -1,0 +1,129 @@
+V "GNAT Lib v5"
+P ZX
+
+RN
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTIONS
+RV NO_FLOATING_POINT
+RV NO_IO
+RV SPARK_05
+
+U math%b		math.adb		43458280 NE OO PK GE IL
+W ada%s			ada.ads			ada.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+Z ada.text_io.float_aux%s  a-tiflau.adb		a-tiflau.ali
+W ada.text_io.float_io%s
+Z ada.text_io.integer_aux%s  a-tiinau.adb	a-tiinau.ali
+W ada.text_io.integer_io%s
+
+U math%s		math.ads		e54cfcc0 BN EE NE OO PK GE IL
+W ada%s			ada.ads			ada.ali
+W ada.containers%s	a-contai.ads		a-contai.ali
+W ada.containers.generic_array_sort%s
+
+D ada.ads		20070406091342 3ffc8e18 ada%s
+D a-contai.ads		20101025135030 61e5e089 ada.containers%s
+D a-cgarso.ads		20070406091342 9129bfa8 ada.containers.generic_array_sort%s
+D a-except.ads		20140730140058 5250cb69 ada.exceptions%s
+D a-ioexce.ads		20140225151544 e4a01f64 ada.io_exceptions%s
+D a-stream.ads		20141120112812 119b8fb3 ada.streams%s
+D a-tags.ads		20140730140058 dc4d0634 ada.tags%s
+D a-textio.ads		20140717063746 386df5d4 ada.text_io%s
+D a-tiflau.ads		20090409150020 c0393f21 ada.text_io.float_aux%s
+D a-tiflio.ads		20140717063514 56fbda09 ada.text_io.float_io%s
+D a-tiflio.adb		20090409150020 fd9b1cfc ada.text_io.float_io%b
+D a-tiinau.ads		20090409150020 8114c8e4 ada.text_io.integer_aux%s
+D a-tiinio.ads		20140717063514 aa04e5d6 ada.text_io.integer_io%s
+D a-tiinio.adb		20091130162120 df9cd7af ada.text_io.integer_io%b
+D a-unccon.ads		20070406091342 f9eb8f06 ada.unchecked_conversion%s
+D interfac.ads		20141120112812 6033a23f interfaces%s
+D i-cstrea.ads		20140801100436 e53d8b8e interfaces.c_streams%s
+D math.ads		20170913215226 74654368 math%s
+D math.adb		20170913215554 0f4d343c math%b
+D system.ads		20141031112220 0f63a871 system%s
+D s-crtl.ads		20141120112812 0ebbdb71 system.crtl%s
+D s-exctab.ads		20140225151140 54135002 system.exception_table%s
+D s-ficobl.ads		20140718105748 078245e4 system.file_control_block%s
+D s-parame.ads		20140801093848 7e2a0d7f system.parameters%s
+D s-soflin.ads		20140801100132 aa763b52 system.soft_links%s
+D s-stache.ads		20140225151140 a37c21ec system.stack_checking%s
+D s-stalib.ads		20150220094550 fa0a3617 system.standard_library%s
+D s-stoele.ads		20140225151140 2dc34a04 system.storage_elements%s
+D s-traent.ads		20140730135026 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20140731130224 9d58a4c0 system.unsigned_types%s
+D s-wchcon.ads		20140718092328 1b7d22d2 system.wch_con%s
+X 1 ada.ads
+16K9*Ada 19e8 18|1r6 19|1r6 3r35 4r33 8r17 10r17 12r47 19r17 21r17 23r17
+. 26r58 84r17 88r17 105r17 110r25 112r17
+X 2 a-contai.ads
+16K13*Containers 24e19 18|1r10
+X 3 a-cgarso.ads
+24u26*Generic_Array_Sort 18|1w21
+X 8 a-textio.ads
+49K13*Text_IO 471e16 19|1w10 3r39 4r37 8r21 10r21 12r51 19r21 21r21 23r21
+. 26r62 84r21 88r21 105r21 110r29 112r21
+242U14*Put 19|8s29 19s29 21s29
+256V13*Get_Line{string} 19|12s59 26s70
+263U14*Put_Line 19|10s29 23s29 84s29 88s29 105s29 110s37 112s29
+X 10 a-tiflio.ads
+46k21*Float_IO 89e25 19|4r45
+68U14 Put 19|86s34[4] 108s42[4]
+X 13 a-tiinio.ads
+46k21*Integer_IO 85e27 19|3r47
+66U14 Put 19|9s28[3] 20s28[3] 22s28[3]
+X 18 math.ads
+3i9 size{positive} 17r33 18r33 18r42 19|9r32 11r29 20r32 22r32 24r29 25r37
+. 37r29 38r37 52r29 53r37 55r45 65r29 67r37 76r29 85r29 94r29 95r37 106r29
+. 107r37
+4k9*math 3z9 17E14 19l5 19e9 19|2b14 115l5 115t9
+5A14*vector(float) 8r36 9r30 9r45 11r29 11r59 12r34 12r49 13r37 17c14 19|5r36
+. 6r23 32r30 32r45 34r21 62r29 62r59 63r15 73r34 73r49 74r23 82r37
+6A14*matrix(float) 7r36 10r34 10r49 11r44 14r35 14r50 15r37 18c14 19|16r36
+. 17r23 49r34 49r49 50r23 62r44 91r35 91r50 92r23 103r37
+7V18*get_matrix{6A14} 19|16b18 30t12
+8V18*get_vector{5A14} 19|5b18 15t12
+9V18*sort{5A14} 9>23 19|32b18 47l13 47t17
+9a23 v{5A14} 19|32b23 36r22
+10V19*"*"{6A14} 10>22 10>26 19|49b19 61l14 61t16
+10a22 m1{6A14} 19|49b22 56r66
+10a26 m2{6A14} 19|49b26 56r77
+11V19*"*"{5A14} 11>22 11>37 19|62b19 72l14 72t16
+11a22 v{5A14} 19|62b22 68r62
+11a37 m{6A14} 19|62b37 68r52
+12V19*"+"{5A14} 12>22 12>26 19|73b19 80l14 80t16
+12a22 v1{5A14} 19|73b22 77r35
+12a26 v2{5A14} 19|73b26 77r43
+13U19*put_vector 13>30 19|82b19 89l13 89t23
+13a30 v{5A14} 19|82b30 86r38
+14V18*transpose{6A14} 14>28 19|91b18 101l13 101t22
+14a28 m{6A14} 19|91b28 96r46 97r46
+15U19*put_matrix 15>30 19|103b19 113l13 113t23
+15a30 m{6A14} 19|103b30 108r46
+X 19 math.adb
+3K17 integer_io[13|46] 9r17 20r17 22r17
+4K17 float_io[10|46] 86r25 108r33
+6a17 ret{18|5A14} 12m25 14r24
+11i21 i{integer} 12r29
+17a17 ret{18|6A14} 26m33 29r24
+24i21 i{integer} 26r37
+25i29 j{integer} 26r40
+33f17 t{float} 40m41 42r49
+34a17 r{18|5A14} 36m17 39r36 39r43 40r46 41m41 41r49 42m41 46r24
+37i21 i{integer} 38r34 39r38 41r51 42r43
+38i29 j{integer} 39r45 40r48 41r43
+50a17 ret{18|6A14} 54m33 56m41 56r54 60r24
+52i21 i{integer} 54r37 56r45 56r58 56r69
+53i29 j{integer} 54r40 56r48 56r61 56r83
+55i37 k{integer} 56r72 56r80
+63a9 ret{18|5A14} 66m25 68m33 68r43 71r24
+65i21 i{integer} 66r29 68r37 68r47 68r54 68r64
+67i29 j{integer} 68r57
+74a17 ret{18|5A14} 77m25 79r24
+76i21 i{integer} 77r29 77r38 77r46
+85i21 i{integer} 86r40
+92a17 ret{18|6A14} 96m33 97m33 100r24
+94i21 i{integer} 95r34 96r37 96r51 97r40 97r48
+95i29 j{integer} 96r40 96r48 97r37 97r51
+106i21 i{integer} 108r48
+107i29 j{integer} 108r51
+
