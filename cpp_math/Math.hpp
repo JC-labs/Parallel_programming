@@ -1,8 +1,9 @@
 #pragma once
 #include "Matrix.hpp"
+#include <string>
 namespace pp {
 	namespace additional {
-		void write(char* text);
+		void write(std::string const& text);
 		void write(double n);
 	}
 	int read_integer();

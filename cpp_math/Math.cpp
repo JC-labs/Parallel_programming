@@ -1,9 +1,7 @@
 #include "Math.hpp"
-#include "Matrix.hpp"
-#include <string>
 #include <iostream>
 
-void pp::additional::write(char* text) {
+void pp::additional::write(std::string const& text) {
 	std::cout << text;
 }
 void pp::additional::write(double n) {
