@@ -14,7 +14,7 @@ namespace parallel_programming_3
         public Math()
         {
             Console.Write("Enter N for all the vectors an matrices: ");
-            n = read_Int32eger();
+            n = read_integer();
         }
 
         public class Vector
@@ -97,7 +97,7 @@ namespace parallel_programming_3
             }
         }
 
-        public Int32 read_Int32eger()
+        public Int32 read_integer()
         {
             return Int32.Parse(Console.ReadLine());
         }
