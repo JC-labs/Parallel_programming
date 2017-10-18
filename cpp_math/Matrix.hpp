@@ -19,16 +19,16 @@ namespace pp {
 		~Matrix() { delete[] m_data; }
 		Vector<T> const& operator[](size_t index) const { return m_data[index]; }
 		Vector<T>& operator[](size_t index) { return m_data[index]; }
-		Matrix operator*(Matrix const& m) {
+		Matrix<T> operator*(Matrix const& m) {
 			Matrix ret(m_size);
-			for (size_t i = 0; i < n; i++)
-				for (size_t j = 0; j < n; j++)
-					for (size_t k = 0; k < n; k++)
+			for (size_t i = 0; i < m_size; i++)
+				for (size_t j = 0; j < m_size; j++)
+					for (size_t k = 0; k < m_size; k++)
 						ret[i][j] += m_data[i][k] * m[k][j];
 			return ret;
 		}
-		Matrix& transpose() {
-			for (size_t i = 0; i < n; i++)
+		Matrix<T>& transpose() {
+			for (size_t i = 0; i < m_size; i++)
 				for (size_t j = 0; j < i; j++)
 					swap(i, j);
 			return this;
