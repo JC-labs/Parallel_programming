@@ -16,6 +16,11 @@ namespace pp {
 			for (size_t i = 0; i < size; i++)
 				m_data[i] = Vector<T>(size);
 		}
+		Matrix(Matrix const& other) : m_size(other.m_size) {
+			m_data = new Vector<T>[m_size];
+			for (size_t i = 0; i < m_size; i++)
+				m_data[i] = other[i];
+		}
 		~Matrix() {}
 		Vector<T> const& operator[](size_t index) const { return m_data[index]; }
 		Vector<T>& operator[](size_t index) { return m_data[index]; }

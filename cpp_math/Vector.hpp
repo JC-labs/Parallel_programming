@@ -10,6 +10,18 @@ namespace pp {
 	public:
 		explicit Vector() {}
 		Vector(size_t size) : m_size(size) { m_data = new T[size]{ (T)0.0 }; }
+		Vector(Vector const& other) : m_size(other.m_size) {
+			m_data = new T[m_size];
+			for (size_t i = 0; i < m_size; i++)
+				m_data[i] = other[i];
+		}
+		Vector& operator=(Vector const& other) {
+			m_size = other.m_size;
+			m_data = new T[m_size];
+			for (size_t i = 0; i < m_size; i++)
+				m_data[i] = other[i];
+			return *this;
+		}
 		~Vector() { delete[] m_data; }
 		T const& operator[](size_t index) const { return m_data[index]; }
 		T& operator[](size_t index) { return m_data[index]; }
