@@ -21,11 +21,11 @@ namespace pp {
 			return ret;
 		}
 		Vector<T> operator+(Vector<T> const& v) const {
-			Vector ret = new Vector();
+			Vector ret(m_size);
 			for (size_t i = 0; i < m_size; i++)
 				ret[i] = m_data[i] + v[i];
 			return ret;
 		}
-		Vector<T> sort() { return Vector<T>(m_size, std::sort(m_data, m_data + m_size)); }
+		Vector<T>& sort() { std::sort(m_data, m_data + m_size); return *this; }
 	};
 }
