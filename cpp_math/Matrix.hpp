@@ -16,7 +16,7 @@ namespace pp {
 			for (size_t i = 0; i < size; i++)
 				m_data[i] = Vector<T>(size);
 		}
-		~Matrix() { delete[] m_data; }
+		~Matrix() {}
 		Vector<T> const& operator[](size_t index) const { return m_data[index]; }
 		Vector<T>& operator[](size_t index) { return m_data[index]; }
 		Matrix<T> operator*(Matrix const& m) {
