@@ -16,40 +16,40 @@ namespace pp {
 			additional::write("Enter N for all the Vectors and Matrices: ");
 			m_size = read_integer();
 		}
-		Vector<double> read_vector() {
-			Vector<T> ret;
+		Vector<T> read_vector() {
+			Vector<T> ret(m_size);
 			for (size_t i = 0; i < m_size; i++)
 				ret[i] = read_double();
 			return ret;
 		}
-		Matrix<double> read_matrix() {
-			Matrix<T> ret;
+		Matrix<T> read_matrix() {
+			Matrix<T> ret(m_size);
 			for (size_t i = 0; i < m_size; i++)
 				for (size_t j = 0; j < m_size; j++)
 					ret[i][j] = read_double();
 			return ret;
 		}
-		Vector<double> fill_vector(double value) {
-			Vector<T> ret;
+		Vector<T> fill_vector(T value) {
+			Vector<T> ret(m_size);
 			for (size_t i = 0; i < m_size; i++)
 				ret[i] = value;
 			return ret;
 		}
-		Matrix<double> fill_matrix(double value) {
-			Matrix<T> ret;
+		Matrix<T> fill_matrix(T value) {
+			Matrix<T> ret(m_size);
 			for (size_t i = 0; i < m_size; i++)
 				for (size_t j = 0; j < m_size; j++)
 					ret[i][j] = value;
 			return ret;
 		}
-		void print(Vector<double>& v) {
+		void print(Vector<T>& v) {
 			if (m_size <= 10) {
 				for (size_t i = 0; i < m_size; i++)
 					additional::write(v[i]);
 				additional::write("\n");
 			}
 		}
-		void print(Matrix<double>& m) {
+		void print(Matrix<T>& m) {
 			if (m_size <= 10) {
 				for (size_t i = 0; i < m_size; i++) {
 					for (size_t j = 0; j < m_size; j++)
@@ -60,13 +60,13 @@ namespace pp {
 			}
 		}
 
-		Vector<double> function_1(Vector<double> &a, Vector<double> &b, Matrix<double> &ma, Matrix<double> &me) {
+		Vector<T> function_1(Vector<T> &a, Vector<T> &b, Matrix<T> &ma, Matrix<T> &me) {
 			return a.sort() * (ma * me) + b.sort();
 		}
-		Matrix<double> function_2(Matrix<double> &mk, Matrix<double> &mh, Matrix<double> &mf) {
+		Matrix<T> function_2(Matrix<T> &mk, Matrix<T> &mh, Matrix<T> &mf) {
 			return mk.transpose() * (mh * mf);
 		}
-		Vector<double> function_3(Vector<double> &r, Vector<double> &s, Matrix<double> &mt, Matrix<double> &mp) {
+		Vector<T> function_3(Vector<T> &r, Vector<T> &s, Matrix<T> &mt, Matrix<T> &mp) {
 			return (r + s).sort() * (mt * mp);
 		}
 	};

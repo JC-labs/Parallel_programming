@@ -8,6 +8,7 @@ namespace pp {
 	protected:
 		Vector(size_t size, T *data) : m_size(size), m_data(data) {}
 	public:
+		explicit Vector() {}
 		Vector(size_t size) : m_size(size) { m_data = new T[size]{ (T)0.0 }; }
 		~Vector() { delete[] m_data; }
 		T const& operator[](size_t index) const { return m_data[index]; }

@@ -12,7 +12,7 @@ namespace pp {
 		}
 	public:
 		Matrix(size_t size) : m_size(size) {
-			m_data = new Vector<T>[size] {size};
+			m_data = new Vector<T>[size];
 			for (size_t i = 0; i < size; i++)
 				m_data[i] = Vector<T>(size);
 		}
