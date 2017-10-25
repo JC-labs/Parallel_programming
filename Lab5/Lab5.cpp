@@ -14,9 +14,9 @@
 */
 #include "Math.hpp"
 int main() {
-	[](void* m) -> void* {
+	//[](void* m) -> void* {
 		pp::additional::write("Thread #1 has been initialized\n");
-		auto math = (pp::Math<double>*)m;
+		pp::Math<double> *math = new pp::Math<double>;
 		pp::Vector<double> a = math->fill_vector(1.0);//math.read_vector();
 		pp::Vector<double> b = math->fill_vector(1.0);//math.read_vector();
 		pp::Matrix<double> ma = math->fill_matrix(1.0);//math.read_matrix();
@@ -26,7 +26,7 @@ int main() {
 		//sleep(15000);
 		math->print(c);
 		pp::additional::write("Thread #1 has finished its execution\n");
-	};
+	//};
 	[](void* m) -> void* {
 		pp::additional::write("Thread #2 has been initialized\n");
 		auto math = (pp::Math<double>*)m;
