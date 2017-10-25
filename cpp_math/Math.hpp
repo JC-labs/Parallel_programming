@@ -56,7 +56,6 @@ namespace pp {
 						additional::write(m[i][j]);
 					additional::write("\n");
 				}
-				additional::write("\n");
 			}
 		}
 
