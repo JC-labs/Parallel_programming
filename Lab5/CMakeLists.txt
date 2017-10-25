@@ -1,0 +1,13 @@
+cmake_minimum_required(VERSION 2.6)
+project (Lab)
+set(CMAKE_BUILD_TYPE Release)
+add_executable(Lab5 Lab5.cpp)
+
+include_directories (${CMAKE_CURRENT_SOURCE_DIR}/../cpp_math)
+find_library(MathLib Math ${CMAKE_CURRENT_SOURCE_DIR}/../cpp_math)
+target_link_libraries(Lab5 ${MathLib} ${CMAKE_THREAD_LIBS_INIT})
+find_package(OpenMP)
+if (OPENMP_FOUND)
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+endif()
