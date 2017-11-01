@@ -12,6 +12,7 @@ namespace pp {
 	template <typename T> class Math {
 		size_t m_size;
 	public:
+		Math(size_t size) : m_size(size) {}
 		Math() {
 			additional::write("Enter N for all the Vectors and Matrices: ");
 			m_size = read_integer();
