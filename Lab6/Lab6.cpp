@@ -13,8 +13,7 @@
     o = (r + s).sort() * (mt * mp);
 */
 #include "Math.hpp"
-#include <mpi.h>
-void function1(pp::Math<double>* math) {
+void f1(pp::Math<double>* math = new pp::Math<double>()) {
 	pp::additional::write("Thread #1 has been initialized\n");
 	pp::Vector<double> a = math->fill_vector(1.0);//math.read_vector();
 	pp::Vector<double> b = math->fill_vector(1.0);//math.read_vector();
@@ -24,7 +23,7 @@ void function1(pp::Math<double>* math) {
 	math->print(c);
 	pp::additional::write("Thread #1 has finished its execution\n");
 }
-void function2(pp::Math<double>* math) {
+void f2(pp::Math<double>* math = new pp::Math<double>()) {
 	pp::additional::write("Thread #2 has been initialized\n");
 	pp::Matrix<double> mk = math->fill_matrix(1.0);//math->read_matrix();
 	pp::Matrix<double> mh = math->fill_matrix(1.0);//math->read_matrix();
@@ -33,7 +32,7 @@ void function2(pp::Math<double>* math) {
 	math->print(mg);
 	pp::additional::write("Thread #2 has finished its execution\n");
 }
-void function3(pp::Math<double>* math) {
+void f3(pp::Math<double>* math = new pp::Math<double>()) {
 	pp::additional::write("Thread #3 has been initialized\n");
 	pp::Vector<double> r = math->fill_vector(1.0);//math->read_vector();
 	pp::Vector<double> s = math->fill_vector(1.0);//math->read_vector();
@@ -43,15 +42,17 @@ void function3(pp::Math<double>* math) {
 	math->print(o);
 	pp::additional::write("Thread #3 has finished its execution\n");
 }
-static int numprocs;
+#include <mpi.h>
 int main(int argN, char** args) {
-	pp::Math<double> math;
-	MPI_Status status; 
 	MPI_Init(&argN, &args);
-	MPI_Comm_size (MPI_COMM_WORLD, &numprocs); 
-	MPI_Comm_rank (MPI_COMM_WORLD, &my_rank);  
-	double time_start = MPI_Wtime();
-	std::cout << "Hello World, my rank is " << my_rank <<" "<< MPI_Wtime() - time_start << std::endl; 
-	MPI_Finalize (); 
+	int rank_id;
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank_id);
+	size_t matrix_size = 9;
+	switch (rank_id) {
+		case 0: f1(new pp::Math<double>(matrix_size)); break;
+		case 1:	f2(new pp::Math<double>(matrix_size)); break;
+		case 2:	f3(new pp::Math<double>(matrix_size)); break;
+	}
+	MPI_Finalize();
 	return 0;
 }
