@@ -4,7 +4,7 @@ set(CMAKE_BUILD_TYPE Release)
 add_executable(Lab6 Lab6.cpp)
 
 find_package(MPI)
-find_library(MathLib Math ${CMAKE_CURRENT_SOURCE_DIR}/../cpp_math)
+find_library(MathLib Math SHARED ${CMAKE_CURRENT_SOURCE_DIR}/../cpp_math/)
 
 IF(MPI_CXX_FOUND)
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${MPI_CXX_FLAGS}")

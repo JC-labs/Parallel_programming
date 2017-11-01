@@ -4,7 +4,7 @@ set(CMAKE_BUILD_TYPE Release)
 add_executable(Lab5 Lab5.cpp)
 
 include_directories (${CMAKE_CURRENT_SOURCE_DIR}/../cpp_math)
-find_library(MathLib Math ${CMAKE_CURRENT_SOURCE_DIR}/../cpp_math)
+find_library(MathLib Math SHARED ${CMAKE_CURRENT_SOURCE_DIR}/../cpp_math)
 target_link_libraries(Lab5 ${MathLib} ${CMAKE_THREAD_LIBS_INIT})
 
 OPTION (USE_OpenMP "Use OpenMP" ON)

@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 project (Math)
 set(CMAKE_BUILD_TYPE Release)
-add_library(Math STATIC Math.cpp)
+add_library(Math SHARED Math.cpp)
+add_library(Math_s STATIC Math.cpp)
 set_target_properties(Math PROPERTIES OUTPUT_NAME Math)
+set_target_properties(Math_s PROPERTIES OUTPUT_NAME Math)
