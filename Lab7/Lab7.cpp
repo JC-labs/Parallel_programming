@@ -32,10 +32,8 @@ public:
 	}) {}
 };
 class f2 {
-	pp::Math<double> *math;
 public:
-	explicit f2(pp::Math<double>* math = new pp::Math<double>()) : math(math) {}
-	void operator()() {
+	void operator()(pp::Math<double>* math = new pp::Math<double>()) {
 		pp::additional::write("Thread #2 has been initialized\n");
 		pp::Matrix<double> mk = math->fill_matrix(1.0);//math->read_matrix();
 		pp::Matrix<double> mh = math->fill_matrix(1.0);//math->read_matrix();
@@ -62,7 +60,7 @@ void f3(pp::Math<double>* math = new pp::Math<double>()) {
 int main(int argN, char** args) {
 	auto math = new pp::Math<double>();
 	f1_thread t1(math);
-	std::thread t2(f2(math));
+	std::thread t2(f2(), math);
 	std::thread t3(f3, math);
 
 	t1.join();
