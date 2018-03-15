@@ -18,14 +18,15 @@ procedure l1 is
         end crutch;
 
         task body crutch is
-            input, dot_t1, dot_t2, res_t1, res_t2 : ada.synchronous_task_control.suspension_object;
+            sem1, sem2, sem3, sem4, sem5 : ada.synchronous_task_control.suspension_object;
+            sem6, sem7 : ada.synchronous_task_control.suspension_object;
 
 	        package mathematics is new math(n); use mathematics;
             b, c : vector;
             mo, mt, mr : matrix;
             d : float;
 
-            bc : float;
+            e : float;
             ma : matrix;
 
         procedure processors is
@@ -42,8 +43,9 @@ procedure l1 is
             end p1;
 
             task body p0 is
-                --bc_temp : float;
-                temp : float;
+                e_i, temp : float;
+                d_1, e_1 : float;
+                mr_1 : matrix;
             begin
                 ada.text_io.put_line("First Processor was initialized.");
                 b := fill_vector;
@@ -52,33 +54,42 @@ procedure l1 is
                 mt := fill_matrix;
                 mr := fill_matrix;
                 d := get_scalar;
-                bc := 0.0;
+                e := 0.0;
                 clear_matrix(ma);
+                ada.synchronous_task_control.set_true(sem6);
+                ada.synchronous_task_control.set_true(sem7);
                 ada.text_io.put_line("Data input was successful.");
-                ada.synchronous_task_control.set_true(input);
+                ada.synchronous_task_control.set_true(sem1);
 
-                --bc_temp := 0.0;
+                e_i := 0.0;
                 for i in 1..n/2 loop
-                    --bc_temp := bc_temp + get(i, b) * get(i, c);
-                    bc := bc + get(i, b) * get(i, c);
+                    e_i := e_i + get(i, b) * get(i, c);
                 end loop;
-                --bc := bc + bc_temp;
+                ada.synchronous_task_control.suspend_until_true(sem6);
+                e := e + e_i;
+                ada.synchronous_task_control.set_true(sem6);
 
-                ada.synchronous_task_control.set_true(dot_t1);
-                ada.synchronous_task_control.suspend_until_true(dot_t2);
+                ada.synchronous_task_control.set_true(sem2);
+                ada.synchronous_task_control.suspend_until_true(sem3);
+
+                ada.synchronous_task_control.suspend_until_true(sem7);
+                mr_1 := mr;
+                d_1 := d;
+                e_1 := e;
+                ada.synchronous_task_control.set_true(sem7);
 
                 for i in 1..n/2 loop
                     for j in 1..n loop 
                         temp := 0.0;
 			    	    for k in 1..n loop
-                            temp := temp + get(i, k, mt) * get(k, j, mr);
+                            temp := temp + get(i, k, mt) * get(k, j, mr_1);
                         end loop;
-                        set(i, j, temp * d + get(i, j, mo) * bc, ma);
+                        set(i, j, temp * d_1 + get(i, j, mo) * e_1, ma);
                     end loop;
                 end loop;
 
-                ada.synchronous_task_control.set_true(res_t1);
-                ada.synchronous_task_control.suspend_until_true(res_t2);
+                ada.synchronous_task_control.set_true(sem5);
+                ada.synchronous_task_control.suspend_until_true(sem4);
 
                 if n < 10 then
                     ada.text_io.put_line("Result of the calculations:");
@@ -88,34 +99,42 @@ procedure l1 is
             end p0;
 
             task body p1 is
-                --bc_temp : float;
-                temp : float;
+                e_i, temp : float;
+                d_1, e_1 : float;
+                mr_1 : matrix;
             begin
-                ada.synchronous_task_control.suspend_until_true(input);
+                ada.synchronous_task_control.suspend_until_true(sem1);
                 ada.text_io.put_line("Second Processor is ready.");
 
-                --bc_temp := 0.0;
+                e_i := 0.0;
                 for i in n/2+1..n loop
-                    --bc_temp := bc_temp + get(i, b) * get(i, c);
-                    bc := bc + get(i, b) * get(i, c);
+                    e_i := e_i + get(i, b) * get(i, c);
                 end loop;
-                --bc := bc + bc_temp;
+                ada.synchronous_task_control.suspend_until_true(sem6);
+                e := e + e_i;
+                ada.synchronous_task_control.set_true(sem6);
 
-                ada.synchronous_task_control.set_true(dot_t2);
-                ada.synchronous_task_control.suspend_until_true(dot_t1);
+                ada.synchronous_task_control.set_true(sem3);
+                ada.synchronous_task_control.suspend_until_true(sem2);
+
+                ada.synchronous_task_control.suspend_until_true(sem7);
+                mr_1 := mr;
+                d_1 := d;
+                e_1 := e;
+                ada.synchronous_task_control.set_true(sem7);
 
                 for i in n/2+1..n loop
                     for j in 1..n loop
                         temp := 0.0;
 				        for k in 1..n loop
-                            temp := temp + get(i, k, mt) * get(k, j, mr);
+                            temp := temp + get(i, k, mt) * get(k, j, mr_1);
                         end loop;
-                        set(i, j, temp * d + get(i, j, mo) * bc, ma);
+                        set(i, j, temp * d_1 + get(i, j, mo) * e_1, ma);
                     end loop;
-                end loop;                
+                end loop;
 
-                ada.synchronous_task_control.set_true(res_t2);
-                ada.synchronous_task_control.suspend_until_true(res_t1);
+                ada.synchronous_task_control.set_true(sem4);
+                ada.synchronous_task_control.suspend_until_true(sem5);
 
                 ada.text_io.put_line("Second Processor has finished processing.");
             end p1;
