@@ -18,7 +18,7 @@ procedure l1 is
         end crutch;
 
         task body crutch is
-            input_suspension, bc_suspension, output_suspension : ada.synchronous_task_control.suspension_object;
+            input, dot_t1, dot_t2, res_t1, res_t2 : ada.synchronous_task_control.suspension_object;
 
 	        package mathematics is new math(n); use mathematics;
             b, c : vector;
@@ -55,7 +55,7 @@ procedure l1 is
                 bc := 0.0;
                 clear_matrix(ma);
                 ada.text_io.put_line("Data input was successful.");
-                ada.synchronous_task_control.set_true(input_suspension);
+                ada.synchronous_task_control.set_true(input);
 
                 --bc_temp := 0.0;
                 for i in 1..n/2 loop
@@ -64,7 +64,8 @@ procedure l1 is
                 end loop;
                 --bc := bc + bc_temp;
 
-                ada.synchronous_task_control.suspend_until_true(bc_suspension);
+                ada.synchronous_task_control.set_true(dot_t1);
+                ada.synchronous_task_control.suspend_until_true(dot_t2);
 
                 for i in 1..n/2 loop
                     for j in 1..n loop 
@@ -75,7 +76,10 @@ procedure l1 is
                         set(i, j, temp * d + get(i, j, mo) * bc, ma);
                     end loop;
                 end loop;
-                ada.synchronous_task_control.suspend_until_true(output_suspension);
+
+                ada.synchronous_task_control.set_true(res_t1);
+                ada.synchronous_task_control.suspend_until_true(res_t2);
+
                 if n < 10 then
                     ada.text_io.put_line("Result of the calculations:");
                     put_matrix(ma);
@@ -87,7 +91,7 @@ procedure l1 is
                 --bc_temp : float;
                 temp : float;
             begin
-                ada.synchronous_task_control.suspend_until_true(input_suspension);
+                ada.synchronous_task_control.suspend_until_true(input);
                 ada.text_io.put_line("Second Processor is ready.");
 
                 --bc_temp := 0.0;
@@ -97,7 +101,8 @@ procedure l1 is
                 end loop;
                 --bc := bc + bc_temp;
 
-                ada.synchronous_task_control.set_true(bc_suspension);
+                ada.synchronous_task_control.set_true(dot_t2);
+                ada.synchronous_task_control.suspend_until_true(dot_t1);
 
                 for i in n/2+1..n loop
                     for j in 1..n loop
@@ -107,8 +112,11 @@ procedure l1 is
                         end loop;
                         set(i, j, temp * d + get(i, j, mo) * bc, ma);
                     end loop;
-                end loop;
-                ada.synchronous_task_control.set_true(output_suspension);
+                end loop;                
+
+                ada.synchronous_task_control.set_true(res_t2);
+                ada.synchronous_task_control.suspend_until_true(res_t1);
+
                 ada.text_io.put_line("Second Processor has finished processing.");
             end p1;
         begin
