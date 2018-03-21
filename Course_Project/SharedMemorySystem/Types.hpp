@@ -1,0 +1,14 @@
+#pragma once
+#include <vector>
+#include <istream>
+using number = float;
+using vector = std::vector<number>;
+using matrix = std::vector<vector>;
+
+void fill(vector &v, number value);
+void fill(matrix &m, number value);
+void get(vector &v, std::istream &s);
+void get(matrix &m, std::istream &s);
+void resize(vector &v, size_t n);
+void resize(matrix &m, size_t n);
+void write(matrix const& m, std::ostream &s);
