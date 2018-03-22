@@ -22,10 +22,7 @@ struct Memory {
 };
 
 template <bool output = true, bool status_print = true, bool copy = false, bool no_temp = false, bool for_blocks = false>
-void solve() {
-	int p, n;
-	read("data\\n.txt", p, n);
-
+void solve(int p, int n) {
 	int size = n / p;
 	Memory m(n);
 	number d = 0, e = std::numeric_limits<number>::min();
