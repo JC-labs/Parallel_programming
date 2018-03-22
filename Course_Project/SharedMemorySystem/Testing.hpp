@@ -10,8 +10,8 @@ size_t test(function f, args...a) {
 }
 
 int test_id = 0;
-void testing(int p, int n) {
-	std::cout << "Testing series #" << test_id++ << " (p = " << p << ", n = " << n << "):\n"
+void testing(int p, int n, std::ostream &s = std::cout) {
+	s << "Testing series #" << test_id++ << " (p = " << p << ", n = " << n << "):\n"
 		<< "\tTest #0 (w/o copies, w/o temporary variables, w/o openMP-style for loops)\n"
 		<< "\t\ttook " << test(solve<false, false, /**/ false, false, false>, p, n) << " microseconds.\n"
 		<< "\tTest #1 (w/o copies, w/o temporary variables, w/ openMP-style for loops)\n"

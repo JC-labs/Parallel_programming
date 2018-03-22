@@ -4,16 +4,18 @@
 
 int main() {
 	std::string s;
-	std::ifstream f;
-	f.open("data\\n.txt");
-	f >> s;
+	std::ifstream fn;
+	fn.open("data\\n.txt");
+	std::ofstream ft;
+	ft.open("data\\testing.txt");
+	fn >> s;
 	if (s == "testing") {
 		int k;
-		f >> k;
+		fn >> k;
 		while (k-- > 0) {
 			int p, n;
-			f >> p >> n;
-			testing(p, n);
+			fn >> p >> n;
+			testing(p, n, ft);
 		};
 	} else {
 		int p, n;

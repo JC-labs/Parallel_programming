@@ -49,5 +49,8 @@
     <Text Include="data\output.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="data\testing.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
