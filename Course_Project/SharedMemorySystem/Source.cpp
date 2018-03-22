@@ -1,5 +1,5 @@
 #include <omp.h>
-#include "Problem.hpp"
+#include "Solution.hpp"
 #include "Testing.hpp"
 
 int main() {
@@ -18,9 +18,11 @@ int main() {
 			testing(p, n, ft);
 		};
 	} else {
+		fn.clear();
+		fn.seekg(0, std::ios::beg);
 		int p, n;
-		f >> p >> n;
-		solve(p, n);
+		fn >> p >> n;
+		solve<true, true, false, false, true>(p, n);
 	}
 	return 0;
 }

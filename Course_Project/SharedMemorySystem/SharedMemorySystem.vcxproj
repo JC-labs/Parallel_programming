@@ -128,7 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="FileReader.hpp" />
-    <ClInclude Include="Problem.hpp" />
+    <ClInclude Include="Solution.hpp" />
     <ClInclude Include="Testing.hpp" />
     <ClInclude Include="Types.hpp" />
   </ItemGroup>

@@ -51,10 +51,10 @@ void solve(int p, int n) {
 
 		if (no_temp) {
 			if (for_blocks) {
-				#pragma omp for reduction(+:d)
+				#pragma omp for reduction(+:d) nowait
 				for (int i = 0; i < n; i++)
 					d += m.b[i] * m.c[i];
-				#pragma omp for
+				#pragma omp for nowait
 				for (int i = 0; i < n; i++) {
 					#pragma omp critical(cs_max)
 					{
@@ -122,7 +122,7 @@ void solve(int p, int n) {
 			omp_unset_lock(&ms_copy);
 
 			if (for_blocks) {
-				#pragma omp for
+				#pragma omp for nowait
 				for (int i = 0; i < n; i++)
 					for (int j = 0; j < n; j++) {
 						number t = 0;
@@ -141,7 +141,7 @@ void solve(int p, int n) {
 			}
 		} else {
 			if (for_blocks) {
-				#pragma omp for
+				#pragma omp for nowait
 				for (int i = 0; i < n; i++)
 					for (int j = 0; j < n; j++) {
 						number t = 0;
