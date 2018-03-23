@@ -3,10 +3,10 @@
 #include "Types.hpp"
 #include <string>
 
-template <typename T, typename = std::enable_if_t<std::is_same_v<T, vector> || std::is_same_v<T, matrix> 
-	|| std::is_same_v<T, int> || std::is_same_v<T, number>>>
+template <typename T, typename = std::enable_if<std::is_same<T, vector>::value || std::is_same<T, matrix>::value
+	|| std::is_same<T, int>::value || std::is_same<T, number>::value>>
 void read(std::istream &s, T &t) {
-	if constexpr (std::is_same_v<T, int> || std::is_same_v<T, number>)
+	if constexpr (std::is_same<T, int>::value || std::is_same<T, number>::value)
 		s >> t;
 	else {
 		std::string temp;
