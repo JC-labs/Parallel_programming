@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{935e9f9c-d1ae-4853-8cdb-00d56a88e233}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{3b414807-385e-438e-ab28-1f5d67ec6dac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{7a609de8-2491-49fc-a01c-463d062237a5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\SharedMemorySystem\FileReader.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SharedMemorySystem\Solution.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SharedMemorySystem\Testing.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SharedMemorySystem\Types.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\SharedMemorySystem\Source.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SharedMemorySystem\Types.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\SharedMemorySystem\data\input_0.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="..\SharedMemorySystem\data\input_1.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="..\SharedMemorySystem\data\n.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="..\SharedMemorySystem\data\output.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="..\SharedMemorySystem\data\testing.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
