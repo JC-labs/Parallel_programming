@@ -16,6 +16,7 @@ int main() {
 			int p, n;
 			fn >> p >> n;
 			testing(p, n, ft);
+			std::cout << k << '\n';
 		};
 	} else {
 		fn.clear();
