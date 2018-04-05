@@ -19,7 +19,7 @@ void read_file(std::istream &s, T &t) {
 template <typename T, typename...Ts>
 void read_file(std::istream &s, T &t, Ts&...ts) {
 	read_file(s, t);
-	if constexpr(sizeof...(ts)) read(s, ts...);
+	if constexpr(sizeof...(ts)) read_file(s, ts...);
 }
 template <typename T, typename...Ts>
 void read_file(std::string &&filename, T &t, Ts&...ts) {
