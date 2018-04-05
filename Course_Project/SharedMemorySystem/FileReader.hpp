@@ -10,9 +10,12 @@ void read_file(std::istream &s, T &t) {
 		s >> t;
 	else {
 		std::string temp;
-		number value;
-		s >> temp >> value;
-		if (temp == "fill") fill(t, value);
+		s >> temp;
+		if (temp == "fill") {
+			number value;
+			s >> value;
+			fill(t, value);
+		}
 		else if (temp == "get") get(t, s);
 	}
 }
