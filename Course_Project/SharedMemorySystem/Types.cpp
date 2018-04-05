@@ -23,7 +23,7 @@ void resize(matrix &m, size_t n) {
 	for (auto &it : m)
 		it.resize(n);
 }
-void write(matrix const& m, std::ostream &s) {
+void write_file(matrix const& m, std::ostream &s) {
 	s << "Output of a matrix (" << m.size() << "x" << m.size() << "):\n";
 	for (auto v : m) {
 		for (auto it : v)
@@ -31,7 +31,7 @@ void write(matrix const& m, std::ostream &s) {
 		s << '\n';
 	}
 }
-void write(vector const& v, std::ostream &s) {
+void write_file(vector const& v, std::ostream &s) {
 	s << "Output of a vector:\n";
 		for (auto it : v)
 			s << it << ' ';

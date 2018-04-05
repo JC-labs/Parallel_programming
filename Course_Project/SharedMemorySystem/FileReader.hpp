@@ -27,13 +27,13 @@ void read_file(std::string &&filename, T &t, Ts&...ts) {
 	f.open(filename);
 	return read_file(f, t, ts...);
 }
-void write(std::string &&filename, matrix const& m) {
+void write_file(std::string &&filename, matrix const& m) {
 	std::ofstream f;
 	f.open(filename);
-	return write(m, f);
+	return write_file(m, f);
 }
-void write(std::string &&filename, vector const& v) {
+void write_file(std::string &&filename, vector const& v) {
 	std::ofstream f;
 	f.open(filename);
-	return write(v, f);
+	return write_file(v, f);
 }
