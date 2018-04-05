@@ -10,12 +10,13 @@
     Function:
 	A = sort(d * Z + min(S) * T * (MO * MK))
 */
-#include "..\..\Course_Project\SharedMemorySystem\FileReader.hpp"
+#include "../../Course_Project/SharedMemorySystem/FileReader.hpp"
 #include <pthread.h>
 #include "pthread_cr_sec.h"
 #include <unistd.h>
 #include <iostream>
 #include <fstream>
+#include <semaphore.h>
 using number = float;
 using vector = std::vector<number>;
 using matrix = std::vector<vector>;
@@ -61,7 +62,7 @@ struct Memory {
 		::resize(a, n);
 		::resize(z, n);
 		::resize(s, n);
-		::resize(r, n);
+		::resize(t, n);
 		::resize(mo, n);
 		::resize(mk, n);
 	}
@@ -86,7 +87,7 @@ int main() {
 	sem_t sem0, sem1, sem2;
 	sem_init(&sem0, 0, 1);
 	sem_init(&sem1, 0, 1);
-	sen_init(&sem2, 0, 3);
+	sem_init(&sem2, 0, 3);
 
 	pthread_mutex_t mutex0, mutex1;
 	pthread_mutex_init(&mutex0, NULL);
@@ -96,28 +97,28 @@ int main() {
 	pthread_cr_sec_init(&cr_sec);
 
 	pthread_cond_t ev0, ev1, ev2, ev3;
-	pthread_cond_init(&ev0);
-	pthread_cond_init(&ev1);
-	pthread_cond_init(&ev2);
-	pthread_cond_init(&ev3);
+	pthread_cond_init(&ev0, NULL);
+	pthread_cond_init(&ev1, NULL);
+	pthread_cond_init(&ev2, NULL);
+	pthread_cond_init(&ev3, NULL);
 
-	if (pthread_create(&t0, NULL, []() {
+	if (pthread_create(&t0, NULL, [](void*) -> void* {
 		std::cout << "Thread #0 has been initialized\n";
 		std::cout << "Thread #0 has finished its execution\n";
-	});
-	if (pthread_create(&t1, NULL, []() {
+	}, NULL)) return -1;
+	if (pthread_create(&t1, NULL, [](void*) -> void* {
 		std::cout << "Thread #1 has been initialized\n";
 		std::cout << "Thread #1 has finished its execution\n";
-	});
-	if (pthread_create(&t2, NULL, []() {
+	}, NULL)) return -1;
+	if (pthread_create(&t2, NULL, [](void*) -> void* {
 		std::cout << "Thread #2 has been initialized\n";
 		std::cout << "Thread #2 has finished its execution\n";
-	});
-	if (pthread_create(&t3, NULL, []() {
+	}, NULL)) return -1;
+	if (pthread_create(&t3, NULL, [](void*) -> void* {
 		std::cout << "Thread #3 has been initialized\n";
 		std::cout << "Thread #3 has finished its execution\n";
-	});
-	pthread_join(&t0);
+	}, NULL)) return -1;
+	pthread_join(t0, NULL);
 
 	sem_destroy(&sem0);
 	sem_destroy(&sem1);
