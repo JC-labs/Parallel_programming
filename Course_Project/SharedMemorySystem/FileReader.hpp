@@ -32,3 +32,8 @@ void write(std::string &&filename, matrix const& m) {
 	f.open(filename);
 	return write(m, f);
 }
+void write(std::string &&filename, vector const& v) {
+	std::ofstream f;
+	f.open(filename);
+	return write(v, f);
+}

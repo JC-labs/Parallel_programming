@@ -31,3 +31,9 @@ void write(matrix const& m, std::ostream &s) {
 		s << '\n';
 	}
 }
+void write(vector const& v, std::ostream &s) {
+	s << "Output of a vector:\n";
+		for (auto it : v)
+			s << it << ' ';
+		s << '\n';
+}

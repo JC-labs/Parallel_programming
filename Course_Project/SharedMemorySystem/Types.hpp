@@ -12,3 +12,4 @@ void get(matrix &m, std::istream &s);
 void resize(vector &v, size_t n);
 void resize(matrix &m, size_t n);
 void write(matrix const& m, std::ostream &s);
+void write(vector const& v, std::ostream &s);

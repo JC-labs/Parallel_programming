@@ -17,42 +17,8 @@
 #include <iostream>
 #include <fstream>
 #include <semaphore.h>
-using number = float;
-using vector = std::vector<number>;
-using matrix = std::vector<vector>;
-
-void fill(vector &v, number value) {
-	for (auto &it : v)
-		it = value;
-}
-void fill(matrix &m, number value) {
-	for (auto &v : m)
-		for (auto &it : v)
-			it = value;
-}
-void get(vector &v, std::istream &s) {
-	for (auto &it : v)
-		s >> it;
-}
-void get(matrix &m, std::istream &s) {
-	for (auto &v : m)
-		for (auto &it : v)
-			s >> it;
-}
-void resize(vector &v, size_t n) { v.resize(n); }
-void resize(matrix &m, size_t n) {
-	m.resize(n);
-	for (auto &it : m)
-		it.resize(n);
-}
-void write(matrix const& m, std::ostream &s) {
-	s << "Output of a matrix (" << m.size() << "x" << m.size() << "):\n";
-	for (auto v : m) {
-		for (auto it : v)
-			s << it << ' ';
-		s << '\n';
-	}
-}
+#include <vector>
+#include "../../Course_Project/SharedMemorySystem/Types.cpp"
 struct Memory {
 	number d;
 	vector a, z, s, t;
@@ -102,22 +68,38 @@ int main() {
 	pthread_cond_init(&ev2, NULL);
 	pthread_cond_init(&ev3, NULL);
 
-	if (pthread_create(&t0, NULL, [](void*) -> void* {
+	if (pthread_create(&t0, NULL, [](void *_m) -> void* {
+		Memory &m = *(Memory*)_m;
 		std::cout << "Thread #0 has been initialized\n";
+		read("data/input_0.txt", m.z, m.mk);
+
+
+		write("data/output.txt", m.a);
 		std::cout << "Thread #0 has finished its execution\n";
-	}, NULL)) return -1;
-	if (pthread_create(&t1, NULL, [](void*) -> void* {
+	}, (void*)&m)) return -1;
+	if (pthread_create(&t1, NULL, [](void *_m) -> void* {
 		std::cout << "Thread #1 has been initialized\n";
+
+
+
 		std::cout << "Thread #1 has finished its execution\n";
-	}, NULL)) return -1;
-	if (pthread_create(&t2, NULL, [](void*) -> void* {
+	}, (void*)&m)) return -1;
+	if (pthread_create(&t2, NULL, [](void *_m) -> void* {
 		std::cout << "Thread #2 has been initialized\n";
+		//read("data/input_2.txt", m.d, m.s);
+
+
+
 		std::cout << "Thread #2 has finished its execution\n";
-	}, NULL)) return -1;
-	if (pthread_create(&t3, NULL, [](void*) -> void* {
+	}, (void*)&m)) return -1;
+	if (pthread_create(&t3, NULL, [](void *_m) -> void* {
 		std::cout << "Thread #3 has been initialized\n";
+		//read("data/input_3.txt", m.t, m.mo);
+
+
+
 		std::cout << "Thread #3 has finished its execution\n";
-	}, NULL)) return -1;
+	}, (void*)&m)) return -1;
 	pthread_join(t0, NULL);
 
 	sem_destroy(&sem0);
