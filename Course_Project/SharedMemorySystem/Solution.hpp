@@ -44,9 +44,9 @@ void solve(int p, int n) {
 		int finish = start + size;
 
 		if (t_id == 0)
-			read("data\\input_0.txt", m.c, m.mo, m.ms);
+			read_file("data\\input_0.txt", m.c, m.mo, m.ms);
 		else if (t_id == p - 1)
-			read("data\\input_0.txt", m.b, m.z, m.mr);
+			read_file("data\\input_0.txt", m.b, m.z, m.mr);
 		#pragma omp barrier
 
 		if (no_temp) {
@@ -162,7 +162,7 @@ void solve(int p, int n) {
 
 		#pragma omp barrier
 		if (output && t_id == p - 1)
-			write("data\\output.txt", m.ma);
+			write_file("data\\output.txt", m.ma);
 		if (status_print) {
 			std::stringstream str;
 			str << "Thread #" << t_id << " has finished.\n";
