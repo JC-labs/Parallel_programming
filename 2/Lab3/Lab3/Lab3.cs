@@ -61,7 +61,7 @@ namespace parallel_programming_3 {
                             temp += mo[i,k] * mk[k,j];
                         a[i] += temp * t[j];
                     }
-                    a[i] = a[i] * b + d * z[i];
+                    a[i] = a[i] * b_i + d_i * z[i];
                 }
                 sort(ref a, size * id, (id == p - 1 ? n : size * (id + 1)) - 1);
 
@@ -93,6 +93,7 @@ namespace parallel_programming_3 {
             n = Int32.Parse(Console.ReadLine());
             Console.Write("Enter a value to fill all the matrices and vectors: ");
             Double tmp = Double.Parse(Console.ReadLine());
+            b = Double.MaxValue;
             a = new Double[n];
             size = n / p;
             tasks = new Thread[p];
@@ -131,6 +132,7 @@ namespace parallel_programming_3 {
             } while (swapped);
         }
         static void merge(ref Double[] v, int i, int ie, int j, int je) {
+            int s = i;
             if (size == 0) return;
             Double[] res = new Double[je - i];
             int ri = 0;
@@ -143,8 +145,8 @@ namespace parallel_programming_3 {
                 res[ri++] = v[i++];
             while (j < je)
                 res[ri++] = v[j++];
-            for (int c = i; c < je; c++)
-                v[c] = res[c];
+            for (int c = s; c < je; c++)
+                v[c] = res[c - s];
         }
     }
 }
