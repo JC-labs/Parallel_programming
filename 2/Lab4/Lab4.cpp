@@ -55,16 +55,16 @@ int main() {
 	std::ifstream fn;
 	fn.open("data/n.txt");
 	fn >> n;
-	Memory m(n, 4);
+	Memory m(n, 6);
 
 	omp_set_dynamic(0);
 	#pragma omp parallel num_threads(m.p)
 	{
 		int id = omp_get_thread_num();
-		std::cout << "Thread #" << id << " has been initialized.\n";
+		std::cout << "Thread #" << id + 1 << " has been initialized.\n";
 		if (id == 0) read_file("data/input_0.txt", m.e, m.mk);
-		if (id == 3) read_file("data/input_1.txt", m.z, m.mo);
-		if (id == 6) read_file("data/input_2.txt", m.t, m.mr);
+		if (id == 2) read_file("data/input_1.txt", m.z, m.mo);
+		if (id == 5) read_file("data/input_2.txt", m.t, m.mr);
 
 		#pragma omp barrier
 
@@ -90,7 +90,7 @@ int main() {
 		#pragma omp atomic read
 			b = m.b;
 		number temp;
-		#pragma omp for collapse(3)
+		#pragma omp for
 		for (int i = m.size * id; i < m.size * (id + 1); i++) {
 			for (int j = 0; j < m.n; j++) {
 				temp = 0;
@@ -101,9 +101,9 @@ int main() {
 			m.a[i] = m.a[i] + m.e[i] * b;
 		}
 
-		if (id == 3) write_file("data/output.txt", m.a);
+		if (id == 2) write_file("data/output.txt", m.a);
 
-		std::cout << "Thread #" << id << " has been resolved.\n";
+		std::cout << "Thread #" << id + 1 << " has been resolved.\n";
 	}
 	return 0;
 }
