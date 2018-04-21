@@ -36,4 +36,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="data\input_0.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="data\input_1.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="data\n.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="data\testing.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
 </Project>

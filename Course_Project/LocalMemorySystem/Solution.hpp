@@ -1,11 +1,11 @@
 #pragma once
-#include <omp.h>
+#include <mpi.h>
 #include <iostream>
 #include <sstream>
 #include <algorithm>
 #include "..\SharedMemorySystem\Types.hpp"
 #include "..\SharedMemorySystem\FileReader.hpp"
-
+/*
 struct Memory {
 	vector b, c, z;
 	matrix ma, mo, mr, ms;
@@ -20,11 +20,11 @@ struct Memory {
 		::resize(ms, n);
 	}
 	Memory(int n) { resize(n); }
-};
+};*/
 
 template <bool output = true, bool status_print = true, bool copy = false, bool no_temp = false, bool for_blocks = false>
-void solve(int p, int n) {
-	int size = n / p;
+void solve(int px, int py, int n) {
+	int size = n / (px * py);/*
 	Memory m(n);
 	number d = 0, e = std::numeric_limits<number>::min();
 
@@ -170,5 +170,5 @@ void solve(int p, int n) {
 			std::cout << str.str();
 		}
 	}
-	if constexpr (copy) omp_destroy_lock(&ms_copy);
+	if constexpr (copy) omp_destroy_lock(&ms_copy);*/
 }

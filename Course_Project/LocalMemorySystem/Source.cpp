@@ -12,17 +12,17 @@ int main() {
 		int k;
 		fn >> k;
 		while (k-- > 0) {
-			int p, n;
-			fn >> p >> n;
-			testing(p, n, ft);
+			int px, py, n;
+			fn >> px >> py >> n;
+			testing(px, py, n, ft);
 			std::cout << k << '\n';
 		};
 	} else {
 		fn.clear();
 		fn.seekg(0, std::ios::beg);
-		int p, n;
-		fn >> p >> n;
-		solve<true, true, false, false, true>(p, n);
+		int px, py, n;
+		fn >> px >> py >> n;
+		solve<true, true, false, false, true>(px, py, n);
 	}
 	return 0;
 }
