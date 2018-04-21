@@ -22,7 +22,7 @@ int main() {
 		fn.seekg(0, std::ios::beg);
 		int px, py, n;
 		fn >> px >> py >> n;
-		solve<true, true, false, false, true>(px, py, n);
+		solve<>(px, py, n);
 	}
 	return 0;
 }
