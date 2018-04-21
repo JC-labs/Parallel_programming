@@ -24,7 +24,23 @@ struct Memory {
 
 template <bool output = true, bool status_print = true, bool copy = false, bool no_temp = false, bool for_blocks = false>
 void solve(int px, int py, int n) {
-	int size = n / (px * py);/*
+	int size = n / (px * py);
+	int x = px / 2, y = py / 2;
+
+	int provided;
+	if (auto temp = MPI_Init_thread(nullptr, nullptr, MPI_THREAD_MULTIPLE, &provided);
+			temp != MPI_SUCCESS || provided != MPI_THREAD_MULTIPLE)
+		std::cout << ("MPI 3.0 isn't supported.");
+	{
+		int id, p; 
+		MPI_Comm_rank(MPI_COMM_WORLD, &id);
+		MPI_Comm_size(MPI_COMM_WORLD, &p);
+		if (p != px * py) std::cout << ("It's impossible to create specified number of threads.");
+
+
+
+	} MPI_Finalize();
+	/*
 	Memory m(n);
 	number d = 0, e = std::numeric_limits<number>::min();
 
