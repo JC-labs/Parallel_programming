@@ -28,6 +28,33 @@ public:
 	}
 };
 template<bool left_to_right> constexpr int inv(int c, int pc) { if constexpr(left_to_right) return c; else return pc - c - 1; }
+template<bool minimum, bool dir, bool print_detailed_status_info = true>
+void distribute(int x, int y, int px, int py, int size, matrix &m) {
+	int n = px * py * size;
+	if (inv<dir>(x, px) == 0 && inv<dir>(y, py) == 0) {
+		if constexpr (print_detailed_status_info)
+			std::cout << '\t' << x << ' ' << y << " starts sending the matrix : " << m.size_x() << 'x' << m.size_y() << "\n";
+		if (inv<dir>(y, py) != py - 1) Sync::send(x, y + (dir ? 1 : -1), minimum ? (py - 1) * px * size : n, n, m.data() + (minimum ? n * (dir ? px * size : 0) : 0));
+		if (inv<dir>(x, px) != px - 1) Sync::send(x + (dir ? 1 : -1), y, minimum ? (px - 1) * size : n, n, m.data() + (minimum ? n * (dir ? size : (py - 1) * px * size) : 0));
+	} else {
+		if (inv<dir>(x, px) == px - 1 && inv<dir>(y, py) == py - 1) {
+			m.resize(n, minimum ? (px - inv<dir>(x, px)) * size : n);
+			if (inv<dir>(x, px) != 0) Sync::receive(x - (dir ? 1 : -1), y, minimum ? (px - inv<dir>(x, px)) * size : n, n, m.data());
+		} else {
+			if (inv<dir>(x, px) == 0) {
+				m.resize(n, minimum ? (py - inv<dir>(y, py)) * px * size : n);
+				Sync::receive(x, y - (dir ? 1 : -1), minimum ? (py - inv<dir>(y, py)) * px * size : n, n, m.data());
+				if (inv<dir>(y, py) != py - 1) Sync::send(x, y + (dir ? 1 : -1), minimum ? (py - inv<dir>(y, py) - 1) * px * size : n, n, m.data() + (minimum ? n * (dir ? px * size : 0) : 0));
+			} else {
+				m.resize(n, minimum ? (px - inv<dir>(x, px)) * size : n);
+				Sync::receive(x - (dir ? 1 : -1), y, minimum ? (px - inv<dir>(x, px)) * size : n, n, m.data());
+			}
+			if (inv<dir>(x, px) != px - 1) Sync::send(x + (dir ? 1 : -1), y, minimum ? (px - inv<dir>(x, px) - 1) * size : n, n, m.data() + (minimum ? n * (dir ? size : (x == px - 1 ? y * px * size : 0)) : 0));
+		}
+		if constexpr (print_detailed_status_info)
+			std::cout << '\t' << x << ' ' << y << " has received part of the vector : " << m.size_x() << 'x' << m.size_y() << "\n";
+	}
+}
 template<bool dir, bool print_detailed_status_info = true>
 void distribute(int x, int y, int px, int py, int size, vector &v) {
 	if (inv<dir>(x, px) == 0 && inv<dir>(y, py) == 0) {
@@ -35,21 +62,21 @@ void distribute(int x, int y, int px, int py, int size, vector &v) {
 			std::cout << '\t' << x << ' ' << y << " starts sending the vector : " << v.size() << "\n";
 		if (inv<dir>(y, py) != py - 1) Sync::send(x, y + (dir ? 1 : -1), (py - 1) * px * size, &v[dir ? px * size : 0]);
 		if (inv<dir>(x, px) != px - 1) Sync::send(x + (dir ? 1 : -1), y, (px - 1) * size, &v[dir ? size : (py - 1) * px * size]);
-	} else if (inv<dir>(x, px) == px - 1 && inv<dir>(y, py) == py - 1) {
-		resize(v, (px - inv<dir>(x, px)) * size);
-		if (inv<dir>(x, px) != 0) Sync::receive(x - (dir ? 1 : -1), y, (px - inv<dir>(x, px)) * size, &v[0]);
-		if constexpr (print_detailed_status_info)
-			std::cout << '\t' << x << ' ' << y << " has received part of the vector : " << v.size() << "\n";
 	} else {
-		if (inv<dir>(x, px) == 0) {
-			resize(v, (py - inv<dir>(y, py)) * px * size);
-			Sync::receive(x, y - (dir ? 1 : -1), (py - inv<dir>(y, py)) * px * size, &v[0]);
-			if (inv<dir>(y, py) != py - 1) Sync::send(x, y + (dir ? 1 : -1), (py - inv<dir>(y, py) - 1) * px * size, &v[dir ? px * size : 0]);
+		if (inv<dir>(x, px) == px - 1 && inv<dir>(y, py) == py - 1) {
+			v.resize((px - inv<dir>(x, px)) * size);
+			if (inv<dir>(x, px) != 0) Sync::receive(x - (dir ? 1 : -1), y, (px - inv<dir>(x, px)) * size, &v[0]);
 		} else {
-			resize(v, (px - inv<dir>(x, px)) * size);
-			Sync::receive(x - (dir ? 1 : -1), y, (px - inv<dir>(x, px)) * size, &v[0]);
+			if (inv<dir>(x, px) == 0) {
+				v.resize((py - inv<dir>(y, py)) * px * size);
+				Sync::receive(x, y - (dir ? 1 : -1), (py - inv<dir>(y, py)) * px * size, &v[0]);
+				if (inv<dir>(y, py) != py - 1) Sync::send(x, y + (dir ? 1 : -1), (py - inv<dir>(y, py) - 1) * px * size, &v[dir ? px * size : 0]);
+			} else {
+				v.resize((px - inv<dir>(x, px)) * size);
+				Sync::receive(x - (dir ? 1 : -1), y, (px - inv<dir>(x, px)) * size, &v[0]);
+			}
+			if (inv<dir>(x, px) != px - 1) Sync::send(x + (dir ? 1 : -1), y, (px - inv<dir>(x, px) - 1) * size, &v[dir ? size : (x == px - 1 ? y * px * size : 0)]);
 		}
-		if (inv<dir>(x, px) != px - 1) Sync::send(x + (dir ? 1 : -1), y, (px - inv<dir>(x, px) - 1) * size, &v[dir ? size : (x == px - 1 ? y * px * size : 0)]);
 		if constexpr (print_detailed_status_info)
 			std::cout << '\t' << x << ' ' << y << " has received part of the vector : " << v.size() << "\n";
 	}
@@ -90,6 +117,8 @@ void distribute(int x, int y, int px, int py, int size, number &value,
 }
 bool const left_to_right = true;
 bool const right_to_left = false;
+bool const minimum_distribution = true;
+bool const full_distribution = false;
 template <bool output = true, bool status_print = true, bool print_detailed_status_info = true, bool print_error_info = true>
 void solve(int px, int py, int n) {
 	int size = n / (px * py);
@@ -112,11 +141,11 @@ void solve(int px, int py, int n) {
 		vector c, b, z;
 		matrix mo, ms, mr;
 		if (id == 0) {
-			resize(c, n); resize(mo, n); resize(ms, n);
+			c.resize(n); mo.resize(n); ms.resize(n);
 			read_file("data\\input_0.txt", c, mo, ms);
 		}
 		if (id == p - 1) {
-			resize(b, n); resize(z, n); resize(mr, n);
+			b.resize(n); z.resize(n); mr.resize(n);
 			read_file("data\\input_1.txt", b, z, mr);
 		}
 
@@ -139,13 +168,10 @@ void solve(int px, int py, int n) {
 		});
 		std::cout << '\n';
 
-		if (x == px - 1 && y == py - 1) {
-			Sync::send(x - 1, y, 2, n, mr.data());
-		} else if (x == px - 2 && y == py - 1) {
-			::matrix res;
-			resize(res, n);
-			Sync::receive(x + 1, y, 2, n, res.data());
-		}
+		distribute<full_distribution, left_to_right, print_detailed_status_info>(x, y, px, py, size, mo);
+		std::cout << "\t\t\t";
+		for (auto it : mo) std::cout << it << ' ';
+		std::cout << '\n';
 
 		if (status_print) std::cout << "Thread #" << id << " has finished.\n";
 	} MPI_Finalize();
