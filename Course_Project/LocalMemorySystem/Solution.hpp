@@ -23,6 +23,59 @@ number dot_product(vector const& v1, int i1, vector const& v2, int i2, int size)
 		res += v1[i1++] * v2[i2++];
 	} return res;
 }
+template <bool print_detailed_status_info = true>
+void distribute_lr_tb(int x, int y, int px, int py, int size, vector &v) {
+	if (x == 0 && y == 0) {
+		if (print_detailed_status_info)
+			std::cout << '\t' << x << ' ' << y << " starts sending the vector : " << v.size() << "\n";
+		if (y != py - 1) Sync::send(x, y + 1, (py - 1) * px * size, &v[px * size]);
+		if (x != px - 1) Sync::send(x + 1, y, (px - 1) * size, &v[size]);
+	} else if (x == px - 1 && y == py - 1) {
+		resize(v, (px - x) * size);
+		Sync::receive(x - 1, y, (px - x) * size, &v[0]);
+		if (print_detailed_status_info)
+			std::cout << '\t' << x << ' ' << y << " has received part of the vector : " << v.size() << "\n";
+	} else {
+		if (x == 0) {
+			resize(v, (py - y) * px * size);
+			Sync::receive(x, y - 1, (py - y) * px * size, &v[0]);
+			if (y != py - 1) Sync::send(x, y + 1, (py - y - 1) * px * size, &v[px * size]);
+		} else {
+			resize(v, (px - x) * size);
+			Sync::receive(x - 1, y, (px - x) * size, &v[0]);
+		}
+		if (x != px - 1) Sync::send(x + 1, y, (px - x - 1) * size, &v[size]);
+		if (print_detailed_status_info)
+			std::cout << '\t' << x << ' ' << y << " has received part of the vector : " << v.size() << "\n";
+	}
+}
+template <bool print_detailed_status_info = true>
+void distribute_rl_bt(int x, int y, int px, int py, int size, vector &v) {
+	if (x == 0 && y == 0) {
+		resize(v, (x + 1) * size);
+		Sync::receive(x + 1, y, (x + 1) * size, &v[0]);
+		if (print_detailed_status_info)
+			std::cout << '\t' << x << ' ' << y << " has received part of the vector : " << v.size() << "\n";
+	} else if (x == px - 1 && y == py - 1) {
+		if (print_detailed_status_info)
+			std::cout << '\t' << x << ' ' << y << " starts sending the vector : " << v.size() << "\n";
+		if (y != 0) Sync::send(x, y - 1, (py - 1) * px * size, &v[0]);
+		if (x != 0) Sync::send(x - 1, y, (px - 1) * size, &v[(py - 1) * px * size]);
+	} else {
+		if (x == px - 1) {
+			resize(v, (y + 1) * px * size);
+			Sync::receive(x, y + 1, (y + 1) * px * size, &v[0]);
+			if (y != 0) Sync::send(x, y - 1, y * px * size, &v[0]);
+			if (x != 0) Sync::send(x - 1, y, x * size, &v[y * px * size]);
+		} else {
+			resize(v, (x + 1) * size);
+			Sync::receive(x + 1, y, (x + 1) * size, &v[0]);
+			if (x != 0) Sync::send(x - 1, y, x * size, &v[0]);
+		}
+		if (print_detailed_status_info)
+			std::cout << '\t' << x << ' ' << y << " has received part of the vector : " << v.size() << "\n";
+	}
+}
 template <bool output = true, bool status_print = true, bool print_detailed_status_info = true, bool print_error_info = true>
 void solve(int px, int py, int n) {
 	int size = n / (px * py);
@@ -53,17 +106,8 @@ void solve(int px, int py, int n) {
 			resize(c, n); resize(mo, n); resize(ms, n);
 			read_file("data\\input_0.txt", c, mo, ms);
 
-			if (print_detailed_status_info) 
-				std::cout << '\t' << x << ' ' << y << " starts sending c : " << c.size() << "\n";
-			if (y != py - 1) Sync::send(x, y + 1, n - (px * size), &c[px * size]);
-			if (x != px - 1) Sync::send(x + 1, y, (px - 1) * size, &c[size]);
-			
-			if (id != p - 1) {
-				resize(b, (x + 1) * size);
-				Sync::receive(x + 1, y, (x + 1) * size, &b[0]);
-				if (print_detailed_status_info)
-					std::cout << '\t' << x << ' ' << y << " has received part of b : " << b.size() << "\n";
-			}
+			distribute_lr_tb<print_detailed_status_info>(x, y, px, py, size, c);
+			distribute_rl_bt<print_detailed_status_info>(x, y, px, py, size, b);
 
 			auto d = dot_product(b, 0, c, 0, size);
 			std::cout << '\t' << x << ' ' << y << " has calculated b * c. Result is equal to " << d << '\n';			
@@ -72,46 +116,15 @@ void solve(int px, int py, int n) {
 			resize(b, n); resize(z, n); resize(mr, n);
 			read_file("data\\input_1.txt", b, z, mr);
 
-			if (id != 0) {
-				resize(c, (px - x) * size);
-				Sync::receive(x - 1, y, (px - x) * size, &c[0]);
-				if (print_detailed_status_info)
-					std::cout << '\t' << x << ' ' << y << " has received part of c : " << c.size() << "\n";
-			}
-			
-			if (print_detailed_status_info)
-				std::cout << '\t' << x << ' ' << y << " starts sending b : " << b.size() << "\n";
-			if (y != 0) Sync::send(x, y - 1, n - (px * size), &b[0]);
-			if (x != 0) Sync::send(x - 1, y, (px - 1) * size, &b[n - (px * size)]);
+			distribute_lr_tb<print_detailed_status_info>(x, y, px, py, size, c);
+			distribute_rl_bt<print_detailed_status_info>(x, y, px, py, size, b);
 
 			auto d = dot_product(b, n - size - 1, c, 0, size);
 			std::cout << '\t' << x << ' ' << y << " has calculated b * c. Result is equal to " << d << '\n';			
 		} 
 		if (id != 0 && id != p - 1) {
-			if (x == 0) {
-				resize(c, (py - y) * px * size);
-				Sync::receive(x, y - 1, (py - y) * px * size, &c[0]);
-				if (y != py - 1) Sync::send(x, y + 1, (py - y - 1) * px * size, &c[px * size]);
-			} else {
-				resize(c, (px - x) * size);
-				Sync::receive(x - 1, y, (px - x) * size, &c[0]);
-			}
-			if (x != px - 1) Sync::send(x + 1, y, (px - x - 1) * size, &c[size]);
-			if (print_detailed_status_info)
-				std::cout << '\t' << x << ' ' << y << " has received part of c : " << c.size() << "\n";
-			
-			if (x == px - 1) {
-				resize(b, (y + 1) * px * size);
-				Sync::receive(x, y + 1, (y + 1) * px * size, &b[0]);
-				if (y != 0) Sync::send(x, y - 1, y * px * size, &b[0]);
-				if (x != 0) Sync::send(x - 1, y, x * size, &b[y * px * size]);
-			} else {
-				resize(b, (x + 1) * size);
-				Sync::receive(x + 1, y, (x + 1) * size, &b[0]);
-				if (x != 0) Sync::send(x - 1, y, x * size, &b[0]);
-			}
-			if (print_detailed_status_info)
-				std::cout << '\t' << x << ' ' << y << " has received part of b : " << b.size() << "\n";
+			distribute_lr_tb<print_detailed_status_info>(x, y, px, py, size, c);
+			distribute_rl_bt<print_detailed_status_info>(x, y, px, py, size, b);
 
 			auto d = dot_product(b, b.size() - size, c, 0, size);
 			std::cout << '\t' << x << ' ' << y << " has calculated b * c. Result is equal to " << d << '\n';
