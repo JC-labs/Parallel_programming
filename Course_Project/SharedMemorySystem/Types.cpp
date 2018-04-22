@@ -33,3 +33,14 @@ number maximum(vector const& v, int i, int size) {
 		if (v[i++] > res) res = v[i - 1];
 	return res;
 }
+matrix calculate(matrix mo, int mo_i, matrix mr, int mr_i, matrix ms, number d, number e, int n, int size) {
+	matrix ma; ma.resize(n, size);
+	for (int i = mr_i; i < mr_i + size; i++, mo_i++)
+		for (int j = 0; j < n; j++) {
+			number t = 0;
+			for (int k = 0; k < n; k++)
+				t += mr[i][k] * ms[k][j];
+			ma[i - mr_i][j] = mo[mo_i][j] * d + t * e;
+		}
+	return ma;
+}

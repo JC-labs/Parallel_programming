@@ -166,6 +166,19 @@ void solve(int px, int py, int n) {
 		distribute<full, left_to_right, print_detailed_status_info>(x, y, px, py, size, ms);
 		broadcast<print_detailed_status_info>(px - 1, py - 1, d);
 		broadcast<print_detailed_status_info>(px - 1, py - 1, e);
+		matrix ma = calculate(mo, 0, mr, mr.size_y() - size, ms, d, e, n, size);
+		if constexpr (status_print) {
+			std::cout << '\t' << x << ' ' << y << " has calculated ma.\n";
+			if constexpr (print_detailed_status_info) {
+				std::cout << "\tResult is a matrix (" << ma.size_x() << 'x' << ma.size_y() << ") :";
+				int i = 0;
+				for (auto it : ma) {
+					if (i++ % ma.size_x() == 0) std::cout << "\n\t\t\t"; 
+					std::cout << it << ' ';
+				}
+				std::cout << '\n';
+			}
+		}
 
 		if (status_print) std::cout << "Thread #" << id << " has finished.\n";
 	} MPI_Finalize();
