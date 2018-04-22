@@ -28,6 +28,13 @@ number dot_product(vector const& v1, int i1, vector const& v2, int i2, int size)
 		res += v1[i1++] * v2[i2++];
 	} return res;
 }
+number maximum(vector const& v, int i, int size) {
+	number res = std::numeric_limits<number>::min();
+	size += i;
+	while (i < size)
+		if (v[i++] > res) res = v[i - 1];
+	return res;
+}
 template<bool left_to_right> constexpr int inv(int c, int pc) { if constexpr(left_to_right) return c; else return pc - c - 1; }
 template<bool dir, bool print_detailed_status_info = true>
 void distribute(int x, int y, int px, int py, int size, vector &v) {
@@ -89,6 +96,8 @@ void distribute(int x, int y, int px, int py, int size, number &value,
 			std::cout << '\t' << x << ' ' << y << " has calculated its value : " << value << "\n";
 	}
 }
+bool const left_to_right = true;
+bool const right_to_left = false;
 template <bool output = true, bool status_print = true, bool print_detailed_status_info = true, bool print_error_info = true>
 void solve(int px, int py, int n) {
 	int size = n / (px * py);
@@ -119,18 +128,28 @@ void solve(int px, int py, int n) {
 			read_file("data\\input_1.txt", b, z, mr);
 		}
 
-		distribute<true, print_detailed_status_info>(x, y, px, py, size, c);
-		distribute<false, print_detailed_status_info>(x, y, px, py, size, b);
-
+		distribute<left_to_right, print_detailed_status_info>(x, y, px, py, size, c);
+		distribute<right_to_left, print_detailed_status_info>(x, y, px, py, size, b);
 		number d = dot_product(b, id == 0 ? 0 : b.size() - size, c, 0, size);
 		if constexpr (status_print) 
 			std::cout << '\t' << x << ' ' << y << " has calculated b * c. Result is equal to " << d << '\n';
-
-		distribute<true, print_detailed_status_info>(x, y, px, py, size, d, [](number a, number b) -> number { 
+		distribute<left_to_right, print_detailed_status_info>(x, y, px, py, size, d, [](number a, number b) -> number {
 			return a + b; 
 		});
-		if constexpr (status_print) 
-			std::cout << '\t' << x << ' ' << y << " has sent d with vaule: " << d << '\n';
+		std::cout << '\n';
+
+		distribute<right_to_left, print_detailed_status_info>(x, y, px, py, size, z);
+		std::cout << "\t\t\t";
+		for (int i = z.size() - size; i < z.size(); i++)
+			std::cout << z[i] << ' ';
+		std::cout << '\n';
+		number e = maximum(z, id == 0 ? 0 : z.size() - size, size);
+		if constexpr (status_print)
+			std::cout << '\t' << x << ' ' << y << " has calculated max(z). Result is equal to " << e << '\n';
+		distribute<left_to_right, print_detailed_status_info>(x, y, px, py, size, e, [](number a, number b) -> number {
+			return a > b ? a : b;
+		});
+		std::cout << '\n';
 
 		if (status_print) std::cout << "Thread #" << id << " has finished.\n";
 	} MPI_Finalize();
