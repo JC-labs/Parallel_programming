@@ -8,7 +8,7 @@ class Sync {
 	inline static int px;
 public:
 	static void init(int _px) { px = _px; }
-	static void send(int x, int y, int count, void *ptr) { 
+	static void send(int x, int y, int count, void *ptr) {
 		MPI_Send(ptr, count, MPI_FLOAT, y * px + x, 0, MPI_COMM_WORLD);
 	}
 	static void receive(int x, int y, int count, void *ptr) {
@@ -20,21 +20,13 @@ public:
 	static void receive(int x, int y, void *ptr) {
 		MPI_Recv(ptr, 1, MPI_FLOAT, y * px + x, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 	}
+	static void send(int x, int y, int row_count, int col_count, void *ptr) {
+		MPI_Send(ptr, row_count * col_count, MPI_FLOAT, y * px + x, 0, MPI_COMM_WORLD);
+	}
+	static void receive(int x, int y, int row_count, int col_count, void *ptr) {
+		MPI_Recv(ptr, row_count * col_count, MPI_FLOAT, y * px + x, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+	}
 };
-number dot_product(vector const& v1, int i1, vector const& v2, int i2, int size) {
-	number res = 0;
-	size += i1;
-	while (i1 < size) {
-		res += v1[i1++] * v2[i2++];
-	} return res;
-}
-number maximum(vector const& v, int i, int size) {
-	number res = std::numeric_limits<number>::min();
-	size += i;
-	while (i < size)
-		if (v[i++] > res) res = v[i - 1];
-	return res;
-}
 template<bool left_to_right> constexpr int inv(int c, int pc) { if constexpr(left_to_right) return c; else return pc - c - 1; }
 template<bool dir, bool print_detailed_status_info = true>
 void distribute(int x, int y, int px, int py, int size, vector &v) {
@@ -139,10 +131,6 @@ void solve(int px, int py, int n) {
 		std::cout << '\n';
 
 		distribute<right_to_left, print_detailed_status_info>(x, y, px, py, size, z);
-		std::cout << "\t\t\t";
-		for (int i = z.size() - size; i < z.size(); i++)
-			std::cout << z[i] << ' ';
-		std::cout << '\n';
 		number e = maximum(z, id == 0 ? 0 : z.size() - size, size);
 		if constexpr (status_print)
 			std::cout << '\t' << x << ' ' << y << " has calculated max(z). Result is equal to " << e << '\n';
@@ -150,6 +138,14 @@ void solve(int px, int py, int n) {
 			return a > b ? a : b;
 		});
 		std::cout << '\n';
+
+		if (x == px - 1 && y == py - 1) {
+			Sync::send(x - 1, y, 2, n, mr.data());
+		} else if (x == px - 2 && y == py - 1) {
+			::matrix res;
+			resize(res, n);
+			Sync::receive(x + 1, y, 2, n, res.data());
+		}
 
 		if (status_print) std::cout << "Thread #" << id << " has finished.\n";
 	} MPI_Finalize();
