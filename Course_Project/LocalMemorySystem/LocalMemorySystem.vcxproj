@@ -139,7 +139,6 @@
     <ClInclude Include="..\SharedMemorySystem\Types.hpp" />
     <ClInclude Include="Distribution.hpp" />
     <ClInclude Include="Solution.hpp" />
-    <ClInclude Include="Testing.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\SharedMemorySystem\Types.cpp" />

@@ -1,17 +1,18 @@
 #pragma once
 #include "Distribution.hpp"
 #include "..\SharedMemorySystem\FileReader.hpp"
-template <bool output = true, bool status_print = true, bool print_detailed_status_info = false, bool print_error_info = true>
-void solve(int px, int py, int n) {
+#include <chrono>
+template <bool output = true, bool status_print = true, bool print_detailed_status_info = false, bool print_error_info = true, bool testing = false>
+int solve(int px, int py, int n, long long *time = nullptr) {
 	int size = n / (px * py);
 	Sync::init(px);
-	
+	int id, p;
 	int provided;
 	if (auto temp = MPI_Init_thread(nullptr, nullptr, MPI_THREAD_MULTIPLE, &provided);
 			(temp != MPI_SUCCESS || provided != MPI_THREAD_MULTIPLE) && print_error_info)
 		std::cout << ("MPI 3.0 isn't supported.");
 	{
-		int id, p; MPI_Comm_rank(MPI_COMM_WORLD, &id); MPI_Comm_size(MPI_COMM_WORLD, &p);
+		MPI_Comm_rank(MPI_COMM_WORLD, &id); MPI_Comm_size(MPI_COMM_WORLD, &p);
 		if (print_error_info && p != px * py) 
 			std::cout << "It's impossible to create specified number(" << px * py << ") of processes.";
 
@@ -22,6 +23,10 @@ void solve(int px, int py, int n) {
 		vector c, b, z;
 		matrix mo, ms, mr;
 		if (id == 0) {
+			if constexpr(testing) {
+				auto start_time = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+				MPI_Send(&start_time, 1, MPI_LONG_LONG, p - 1, 0, MPI_COMM_WORLD);
+			}
 			c.resize(n); mo.resize(n); ms.resize(n);
 			read_file("data\\input_0.txt", c, mo, ms);
 		}
@@ -68,7 +73,7 @@ void solve(int px, int py, int n) {
 		collect<left_to_right, print_detailed_status_info>(x, y, px, py, size, ma);
 
 		if (x == px - 1 && y == py - 1) {
-			write_file("data/output.txt", ma);
+			if constexpr (output) write_file("data/output.txt", ma);
 			if constexpr (print_detailed_status_info) {
 				std::cout << '\t' << x << ' ' << y << " has received resulting matrix.\n";
 				std::cout << "\tResult is a matrix (" << ma.size_x() << 'x' << ma.size_y() << ") :";
@@ -79,7 +84,16 @@ void solve(int px, int py, int n) {
 				}
 				std::cout << '\n';
 			}
+			if constexpr(testing) {
+				if (time) {
+					long long start_time;
+					long long end_time = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+					MPI_Recv(&start_time, 1, MPI_LONG_LONG, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+					*time = end_time - start_time;
+				}
+			}
 		}
 		if (status_print) std::cout << "Thread #" << id << " has finished.\n";
 	} MPI_Finalize();
+	return id;
 }

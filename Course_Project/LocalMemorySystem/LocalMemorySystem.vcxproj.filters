@@ -24,9 +24,6 @@
     <ClInclude Include="Solution.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Testing.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Distribution.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
