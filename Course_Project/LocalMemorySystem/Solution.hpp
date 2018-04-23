@@ -73,7 +73,7 @@ void distribute(int x, int y, int px, int py, int size, vector &v) {
 	}
 }
 template<bool dir, bool print_detailed_status_info = true>
-void distribute(int x, int y, int px, int py, int size, number &value, 
+void collect(int x, int y, int px, int py, int size, number &value, 
 				std::function<number(number, number)> lambda 
 				= [](number a, number b) -> number { return a; }) {
 	if (inv<dir>(x, px) == 0 && inv<dir>(y, py) == 0) {
@@ -147,7 +147,7 @@ void solve(int px, int py, int n) {
 		number d = dot_product(b, id == 0 ? 0 : b.size() - size, c, 0, size);
 		if constexpr (status_print) 
 			std::cout << '\t' << x << ' ' << y << " has calculated b * c. Result is equal to " << d << '\n';
-		distribute<left_to_right, print_detailed_status_info>(x, y, px, py, size, d, [](number a, number b) -> number {
+		collect<left_to_right, print_detailed_status_info>(x, y, px, py, size, d, [](number a, number b) -> number {
 			return a + b; 
 		});
 		std::cout << '\n';
@@ -156,7 +156,7 @@ void solve(int px, int py, int n) {
 		number e = maximum(z, id == 0 ? 0 : z.size() - size, size);
 		if constexpr (status_print)
 			std::cout << '\t' << x << ' ' << y << " has calculated max(z). Result is equal to " << e << '\n';
-		distribute<left_to_right, print_detailed_status_info>(x, y, px, py, size, e, [](number a, number b) -> number {
+		collect<left_to_right, print_detailed_status_info>(x, y, px, py, size, e, [](number a, number b) -> number {
 			return a > b ? a : b;
 		});
 		std::cout << '\n';
