@@ -45,6 +45,39 @@ void distribute(int x, int y, int px, int py, int size, matrix &m) {
 			std::cout << '\t' << x << ' ' << y << " has received a matrix : " << m.size_x() << 'x' << m.size_y() << "\n";
 	}
 }
+template<bool dir, bool print_detailed_status_info = true>
+void collect(int x, int y, int px, int py, int size, matrix &m) {
+	int n = px * py * size;
+	if (inv<dir>(x, px) == 0 && inv<dir>(y, py) == 0) {
+		if constexpr (print_detailed_status_info)
+			std::cout << '\t' << x << ' ' << y << " starts sending a matrix : " << m.size_x() << 'x' << m.size_y() << '\n';
+		if (inv<dir>(x, px) != px - 1) Sync::send(x + (dir ? 1 : -1), y, size, n, m.data());
+	} else {
+		if (inv<dir>(x, px) == px - 1 && inv<dir>(y, py) == py - 1) {
+			m.resize(n, n);
+			std::move(m.begin(), m.begin() + size * n, m.end() - size * n);
+			if (inv<dir>(y, py) != 0) Sync::receive(x, y - (dir ? 1 : -1), y * px * size, n, m.data());
+			if (inv<dir>(x, px) != 0) Sync::receive(x - (dir ? 1 : -1), y, x * size, n, m.data() + y * px * size * n);
+		} else {
+			if (inv<dir>(x, px) == px - 1) {
+				m.resize(n, (y + 1) * px * size);
+				std::move(m.begin(), m.begin() + size * n, m.end() - size * n);
+				if (inv<dir>(y, py) != 0) Sync::receive(x, y - (dir ? 1 : -1), y * px * size, n, m.data());
+				if (inv<dir>(x, px) != 0) Sync::receive(x - (dir ? 1 : -1), y, x * size, n, m.data() + y * px * size * n);
+			} else {
+				m.resize(n, (x + 1) * size);
+				std::move(m.begin(), m.begin() + size * n, m.end() - size * n);
+				if (inv<dir>(x, px) != 0) Sync::receive(x - (dir ? 1 : -1), y, x * size, n, m.data());
+			}
+			if (inv<dir>(x, px) == px - 1 && inv<dir>(y, py) != py - 1)
+				Sync::send(x, y + (dir ? 1 : -1), (y + 1) * px * size, n, m.data());
+			else if (inv<dir>(x, px) != px - 1)
+				Sync::send(x + (dir ? 1 : -1), y, (x + 1) * size, n, m.data());
+		}
+		if constexpr (print_detailed_status_info)
+			std::cout << '\t' << x << ' ' << y << " has received a matrix : " << m.size_x() << 'x' << m.size_y() << "\n";
+	}
+}
 template<bool minimum, bool dir, bool print_detailed_status_info = true>
 void distribute(int x, int y, int px, int py, int size, vector &v) {
 	int n = px * py * size;
@@ -112,12 +145,12 @@ bool const left_to_right = true;
 bool const right_to_left = false;
 bool const minimum = true;
 bool const full = false;
-template <bool output = true, bool status_print = true, bool print_detailed_status_info = true, bool print_error_info = true>
+template <bool output = true, bool status_print = true, bool print_detailed_status_info = false, bool print_error_info = true>
 void solve(int px, int py, int n) {
 	int size = n / (px * py);
 	int x = px / 2, y = py / 2;
 	Sync::init(px);
-
+	
 	int provided;
 	if (auto temp = MPI_Init_thread(nullptr, nullptr, MPI_THREAD_MULTIPLE, &provided);
 			(temp != MPI_SUCCESS || provided != MPI_THREAD_MULTIPLE) && print_error_info)
@@ -145,21 +178,21 @@ void solve(int px, int py, int n) {
 		distribute<minimum, left_to_right, print_detailed_status_info>(x, y, px, py, size, c);
 		distribute<minimum, right_to_left, print_detailed_status_info>(x, y, px, py, size, b);
 		number d = dot_product(b, id == 0 ? 0 : b.size() - size, c, 0, size);
-		if constexpr (status_print) 
+		if constexpr (print_detailed_status_info)
 			std::cout << '\t' << x << ' ' << y << " has calculated b * c. Result is equal to " << d << '\n';
 		collect<left_to_right, print_detailed_status_info>(x, y, px, py, size, d, [](number a, number b) -> number {
 			return a + b; 
 		});
-		std::cout << '\n';
+		if constexpr (print_detailed_status_info) std::cout << '\n';
 
 		distribute<minimum, right_to_left, print_detailed_status_info>(x, y, px, py, size, z);
 		number e = maximum(z, id == 0 ? 0 : z.size() - size, size);
-		if constexpr (status_print)
+		if constexpr (print_detailed_status_info)
 			std::cout << '\t' << x << ' ' << y << " has calculated max(z). Result is equal to " << e << '\n';
 		collect<left_to_right, print_detailed_status_info>(x, y, px, py, size, e, [](number a, number b) -> number {
 			return a > b ? a : b;
 		});
-		std::cout << '\n';
+		if constexpr (print_detailed_status_info) std::cout << '\n';
 
 		distribute<minimum, left_to_right, print_detailed_status_info>(x, y, px, py, size, mo);
 		distribute<minimum, right_to_left, print_detailed_status_info>(x, y, px, py, size, mr);
@@ -167,19 +200,30 @@ void solve(int px, int py, int n) {
 		broadcast<print_detailed_status_info>(px - 1, py - 1, d);
 		broadcast<print_detailed_status_info>(px - 1, py - 1, e);
 		matrix ma = calculate(mo, 0, mr, mr.size_y() - size, ms, d, e, n, size);
-		if constexpr (status_print) {
+		if constexpr (print_detailed_status_info) {
 			std::cout << '\t' << x << ' ' << y << " has calculated ma.\n";
+			std::cout << "\tResult is a matrix (" << ma.size_x() << 'x' << ma.size_y() << ") :";
+			int i = 0;
+			for (auto it : ma) {
+				if (i++ % ma.size_x() == 0) std::cout << "\n\t\t\t"; 
+				std::cout << it << ' ';
+			}
+			std::cout << '\n';
+		}
+		collect<left_to_right, print_detailed_status_info>(x, y, px, py, size, ma);
+		if (x == px - 1 && y == py - 1) {
+			write_file("data/output.txt", ma);
 			if constexpr (print_detailed_status_info) {
+				std::cout << '\t' << x << ' ' << y << " has received resulting matrix.\n";
 				std::cout << "\tResult is a matrix (" << ma.size_x() << 'x' << ma.size_y() << ") :";
 				int i = 0;
 				for (auto it : ma) {
-					if (i++ % ma.size_x() == 0) std::cout << "\n\t\t\t"; 
+					if (i++ % ma.size_x() == 0) std::cout << "\n\t\t\t";
 					std::cout << it << ' ';
 				}
 				std::cout << '\n';
 			}
 		}
-
 		if (status_print) std::cout << "Thread #" << id << " has finished.\n";
 	} MPI_Finalize();
 }
