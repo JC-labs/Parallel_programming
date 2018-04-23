@@ -27,6 +27,9 @@
     <ClInclude Include="Testing.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Distribution.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\SharedMemorySystem\Types.cpp">

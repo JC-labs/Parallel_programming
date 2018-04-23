@@ -137,6 +137,7 @@
   <ItemGroup>
     <ClInclude Include="..\SharedMemorySystem\FileReader.hpp" />
     <ClInclude Include="..\SharedMemorySystem\Types.hpp" />
+    <ClInclude Include="Distribution.hpp" />
     <ClInclude Include="Solution.hpp" />
     <ClInclude Include="Testing.hpp" />
   </ItemGroup>
