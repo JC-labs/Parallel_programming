@@ -5,16 +5,18 @@
 #include "..\SharedMemorySystem\Types.hpp"
 class Sync {
 	inline static int px;
+	Sync() {};
 public:
 	static void init(int _px) { px = _px; }
-	static void send(int x, int y, int count, void *ptr) { MPI_Send(ptr, count, MPI_FLOAT, y * px + x, 0, MPI_COMM_WORLD); }
-	static void receive(int x, int y, int count, void *ptr) { MPI_Recv(ptr, count, MPI_FLOAT, y * px + x, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE); }
 	static void send(int x, int y, void *ptr) { return send(x, y, 1, ptr); }
-	static void receive(int x, int y, void *ptr) { return receive(x, y, 1, ptr); }
+	static void send(int x, int y, int count, void *ptr) { MPI_Send(ptr, count, MPI_FLOAT, y * px + x, 0, MPI_COMM_WORLD); }
 	static void send(int x, int y, int row_count, int col_count, void *ptr) { MPI_Send(ptr, row_count * col_count, MPI_FLOAT, y * px + x, 0, MPI_COMM_WORLD); }
+	static void receive(int x, int y, void *ptr) { return receive(x, y, 1, ptr); }
+	static void receive(int x, int y, int count, void *ptr) { MPI_Recv(ptr, count, MPI_FLOAT, y * px + x, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE); }
 	static void receive(int x, int y, int row_count, int col_count, void *ptr) { MPI_Recv(ptr, row_count * col_count, MPI_FLOAT, y * px + x, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE); }
-	static void broadcast(int x, int y, int count, void *ptr) { MPI_Bcast(ptr, count, MPI_FLOAT, y * px + x, MPI_COMM_WORLD); }
 	static void broadcast(int x, int y, void *ptr) { return broadcast(x, y, 1, ptr); }
+	static void broadcast(int x, int y, int count, void *ptr) { MPI_Bcast(ptr, count, MPI_FLOAT, y * px + x, MPI_COMM_WORLD); }
+	static void broadcast(int x, int y, int row_count, int col_count, void *ptr) { MPI_Bcast(ptr, row_count * col_count, MPI_FLOAT, y * px + x, MPI_COMM_WORLD); }
 };
 template<bool left_to_right> constexpr int inv(int c, int pc) { if constexpr(left_to_right) return c; else return pc - c - 1; }
 template<bool minimum, bool dir, bool print_detailed_status_info = true>
