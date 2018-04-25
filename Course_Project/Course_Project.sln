@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SharedMemorySystem", "Share
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SMSLinux_entry_point", "SMSLinux_entry_point\SMSLinux_entry_point.vcxproj", "{B8EF1EF8-FD74-4105-BE51-553F222423A7}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LocalMemorySystem", "LocalMemorySystem\LocalMemorySystem.vcxproj", "{72C22C7A-D77D-461E-8014-9ACD2643668A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -39,6 +41,16 @@ Global
 		{B8EF1EF8-FD74-4105-BE51-553F222423A7}.Release|x64.Build.0 = Release|x64
 		{B8EF1EF8-FD74-4105-BE51-553F222423A7}.Release|x86.ActiveCfg = Release|x86
 		{B8EF1EF8-FD74-4105-BE51-553F222423A7}.Release|x86.Build.0 = Release|x86
+		{72C22C7A-D77D-461E-8014-9ACD2643668A}.Debug|ARM.ActiveCfg = Debug|Win32
+		{72C22C7A-D77D-461E-8014-9ACD2643668A}.Debug|x64.ActiveCfg = Debug|x64
+		{72C22C7A-D77D-461E-8014-9ACD2643668A}.Debug|x64.Build.0 = Debug|x64
+		{72C22C7A-D77D-461E-8014-9ACD2643668A}.Debug|x86.ActiveCfg = Debug|Win32
+		{72C22C7A-D77D-461E-8014-9ACD2643668A}.Debug|x86.Build.0 = Debug|Win32
+		{72C22C7A-D77D-461E-8014-9ACD2643668A}.Release|ARM.ActiveCfg = Release|Win32
+		{72C22C7A-D77D-461E-8014-9ACD2643668A}.Release|x64.ActiveCfg = Release|x64
+		{72C22C7A-D77D-461E-8014-9ACD2643668A}.Release|x64.Build.0 = Release|x64
+		{72C22C7A-D77D-461E-8014-9ACD2643668A}.Release|x86.ActiveCfg = Release|Win32
+		{72C22C7A-D77D-461E-8014-9ACD2643668A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
