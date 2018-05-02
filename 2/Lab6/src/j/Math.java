@@ -21,25 +21,11 @@ public class Math {
             for (int i = 0; i < n; i++)
                 m_data[i] = 0.0;
         }
-        /*Vector sort() {
-            Arrays.sort(m_data);
-            return this;
-        }
-        Vector multiply(Matrix m) {
-            Vector ret = new Vector();
-            for (int i = 0; i < n; i++)
-                for (int j = 0; j < n; j++)
-                    ret.m_data[i] += m_data[j] * m.m_data[j][i];
-            return ret;
-        }
-        Vector sum(Vector v) {
-            Vector ret = new Vector();
-            for (int i = 0; i < n; i++)
-                ret.m_data[i] = m_data[i] + v.m_data[i];
-            return ret;
-        }*/
         void set(Integer i, Double v) {
             m_data[i] = v;
+        }
+        void append(Integer i, Double v) {
+            m_data[i] += v;
         }
         Double get(Integer i) {
             return m_data[i];
