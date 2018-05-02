@@ -38,26 +38,7 @@ public class Math {
             for (int i = 0; i < n; i++)
                 for (int j = 0; j < n; j++)
                     m_data[i][j] = 0.0;
-        }/*
-        Matrix multiply(Matrix m) {
-            Matrix ret = new Matrix();
-            for (int i = 0; i < n; i++)
-                for (int j = 0; j < n; j++)
-                    for (int k = 0; k < n; k++)
-                        ret.m_data[i][j] += m_data[i][k] * m.m_data[k][j];
-            return ret;
         }
-        void swap(Integer i, Integer j) {
-            Double t = m_data[i][j];
-            m_data[i][j] = m_data[j][i];
-            m_data[j][i] = m_data[i][j];
-        }
-        Matrix transpose() {
-            for (int i = 0; i < n; i++)
-                for (int j = 0; j < i; j++)
-                    swap(i, j);
-            return this;
-        }*/
         void set(Integer i, Integer j, Double v) {
             m_data[i][j] = v;
         }
