@@ -1,4 +1,5 @@
 #include "Solution.hpp"
+#include <chrono>
 int main() {
 	if (int provided, temp = MPI_Init_thread(nullptr, nullptr, MPI_THREAD_MULTIPLE, &provided);
 			(temp != MPI_SUCCESS || provided != MPI_THREAD_MULTIPLE))
@@ -17,7 +18,7 @@ int main() {
 	}
 	MPI_Bcast(data, 3, MPI_INT, 0, MPI_COMM_WORLD);
 
-	solve<false, true, false, true>(data[0], data[1], data[2]);
+	solve<false, true, false>(data[0], data[1], data[2]);
 	if (id == p - 1) {
 		std::ofstream ft;
 		ft.open("data/testing.txt", std::fstream::app);

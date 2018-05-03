@@ -30,7 +30,7 @@ void solve(int px, int py, int n) {
 		return a + b; 
 	});
 	if constexpr (print_detailed_status_info) std::cout << '\n';
-
+	
 	distribute<minimum, right_to_left, print_detailed_status_info>(x, y, px, py, size, z);
 	number e = maximum(z, id == 0 ? 0 : z.size() - size, size);
 	if constexpr (print_detailed_status_info)
@@ -39,7 +39,7 @@ void solve(int px, int py, int n) {
 		return a > b ? a : b;
 	});
 	if constexpr (print_detailed_status_info) std::cout << '\n';
-
+	
 	distribute<minimum, left_to_right, print_detailed_status_info>(x, y, px, py, size, mo);
 	distribute<minimum, right_to_left, print_detailed_status_info>(x, y, px, py, size, mr);
 	distribute<full, left_to_right, print_detailed_status_info>(x, y, px, py, size, ms);
@@ -47,17 +47,17 @@ void solve(int px, int py, int n) {
 	broadcast<print_detailed_status_info>(px - 1, py - 1, e);
 	matrix ma = calculate(mo, 0, mr, mr.size_y() - size, ms, d, e, n, size);
 	if constexpr (print_detailed_status_info) {
-			std::cout << '\t' << x << ' ' << y << " has calculated ma.\n";
-			std::cout << "\tResult is a matrix (" << ma.size_x() << 'x' << ma.size_y() << ") :";
-			int i = 0;
-			for (auto it : ma) {
-				if (i++ % ma.size_x() == 0) std::cout << "\n\t\t\t"; 
-				std::cout << it << ' ';
-			}
-			std::cout << '\n';
+		std::cout << '\t' << x << ' ' << y << " has calculated ma.\n";
+		std::cout << "\tResult is a matrix (" << ma.size_x() << 'x' << ma.size_y() << ") :";
+		int i = 0;
+		for (auto it : ma) {
+			if (i++ % ma.size_x() == 0) std::cout << "\n\t\t\t"; 
+			std::cout << it << ' ';
 		}
+		std::cout << '\n';
+	}
 	collect<left_to_right, print_detailed_status_info>(x, y, px, py, size, ma);
-
+	
 	if (x == px - 1 && y == py - 1) {
 		if constexpr (output) write_file("data/output.txt", ma);
 		if constexpr (print_detailed_status_info) {

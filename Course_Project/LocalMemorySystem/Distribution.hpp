@@ -31,6 +31,7 @@ void distribute(int x, int y, int px, int py, int size, matrix &m) {
 		if (inv<dir>(x, px) == px - 1 && inv<dir>(y, py) == py - 1) {
 			m.resize(n, minimum ? (px - inv<dir>(x, px)) * size : n);
 			if (inv<dir>(x, px) != 0) Sync::receive(x - (dir ? 1 : -1), y, minimum ? (px - inv<dir>(x, px)) * size : n, n, m.data());
+			else if (inv<dir>(y, py) != 0) Sync::receive(x, y - (dir ? 1 : -1), minimum ? (py - inv<dir>(y, py)) * px * size : n, n, m.data());
 		} else {
 			if (inv<dir>(x, px) == 0) {
 				m.resize(n, minimum ? (py - inv<dir>(y, py)) * px * size : n);
@@ -53,6 +54,7 @@ void collect(int x, int y, int px, int py, int size, matrix &m) {
 		if constexpr (print_detailed_status_info)
 			std::cout << '\t' << x << ' ' << y << " starts sending a matrix : " << m.size_x() << 'x' << m.size_y() << '\n';
 		if (inv<dir>(x, px) != px - 1) Sync::send(x + (dir ? 1 : -1), y, size, n, m.data());
+		else if (inv<dir>(y, py) != py - 1)	Sync::send(x, y + (dir ? 1 : -1), size, n, m.data());
 	} else {
 		if (inv<dir>(x, px) == px - 1 && inv<dir>(y, py) == py - 1) {
 			m.resize(n, n);
@@ -91,6 +93,7 @@ void distribute(int x, int y, int px, int py, int size, vector &v) {
 		if (inv<dir>(x, px) == px - 1 && inv<dir>(y, py) == py - 1) {
 			v.resize(minimum ? (px - inv<dir>(x, px)) * size : n);
 			if (inv<dir>(x, px) != 0) Sync::receive(x - (dir ? 1 : -1), y, minimum ? (px - inv<dir>(x, px)) * size : n, v.data());
+			else if (inv<dir>(y, py) != 0) Sync::receive(x, y - (dir ? 1 : -1), minimum ? (py - inv<dir>(y, py)) * px * size : n, v.data());
 		} else {
 			if (inv<dir>(x, px) == 0) {
 				v.resize(minimum ? (py - inv<dir>(y, py)) * px * size : n);
@@ -114,6 +117,7 @@ void collect(int x, int y, int px, int py, int size, number &value,
 		if constexpr (print_detailed_status_info)
 			std::cout << '\t' << x << ' ' << y << " starts sending a number : " << value << "\n";
 		if (inv<dir>(x, px) != px - 1) Sync::send(x + (dir ? 1 : -1), y, &value);
+		else if (inv<dir>(y, py) != py - 1)	Sync::send(x, y + (dir ? 1 : -1), &value);
 	} else {
 		if (inv<dir>(x, px) == px - 1 && inv<dir>(y, py) == py - 1) {
 			number temp;
