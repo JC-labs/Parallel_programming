@@ -20,6 +20,7 @@ package math is
 	procedure put_matrix(m : in matrix);
 	procedure put_scalar(f : in float);
 	procedure clear_matrix(m : out matrix);
+	procedure clear_vector(v : out vector);
 
 	function get(i : in positive; v : in vector) return float;
 	function get(i, j : in positive; m : in matrix) return float;

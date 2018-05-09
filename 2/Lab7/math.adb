@@ -91,6 +91,12 @@ package body math is
 			end loop;
 		end loop;
 	end clear_matrix;
+	procedure clear_vector(v : out vector) is
+	begin
+		for i in 1..size loop
+			v(i) := 0.0;
+		end loop;
+	end clear_vector;
 
 	function get(i : in positive; v : in vector) return float is
 	begin
