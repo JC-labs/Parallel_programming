@@ -33,29 +33,21 @@ package body math is
 		end loop;
 		return ret;
 	end;	
-	function fill_matrix return matrix is
+	function fill_matrix(v : in float) return matrix is
 		ret : matrix;
-		f : float;
 	begin
-		ada.text_io.put("Input a float to fill the matrix: ");
-		f := float'value(ada.text_io.get_line);
-		--f := 1.0;
 		for i in 1..size loop
 			for j in 1..size loop
-				ret(i, j) := f;
+				ret(i, j) := v;
 			end loop;
 		end loop;
 		return ret;
 	end;
-	function fill_vector return vector is
+	function fill_vector(v : in float) return vector is
 		ret : vector;
-		f : float;
 	begin
-		ada.text_io.put("Input a float to fill the vector: ");
-		f := float'value(ada.text_io.get_line);
-		--f := 1.0;
 		for i in 1..size loop
-			ret(i) := f;
+			ret(i) := v;
 		end loop;
 		return ret;
 	end;

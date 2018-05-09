@@ -14,8 +14,8 @@ package math is
 	function get_scalar return float;
 	function get_matrix return matrix;
 	function get_vector return vector;
-	function fill_matrix return matrix;
-	function fill_vector return vector;
+	function fill_matrix(v : in float) return matrix;
+	function fill_vector(v : in float) return vector;
 	procedure put_vector(v : in vector);
 	procedure put_matrix(m : in matrix);
 	procedure put_scalar(f : in float);

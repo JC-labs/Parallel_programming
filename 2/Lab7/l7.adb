@@ -19,12 +19,6 @@ procedure l7 is
 		end crutch;
 		task body crutch is
 			package mathematics is new math(n); use mathematics;
-			b, c, d, t : vector;
-			mo, ms : matrix;
-            e : float;
-
-			a : vector;
-
             type sync is record
                 this_id, with_id, size : integer;
                 dir : boolean;
@@ -48,8 +42,8 @@ procedure l7 is
                 procedure pop(the_fifo : in out fifo_type; item : out element_type) is
                 begin 
                     if is_empty(the_fifo) then raise empty_error; end if;
-                    item := the_fifo.first_element;
-                    the_fifo.delete_first;
+                    item := the_fifo.last_element;
+                    the_fifo.delete_last;
                 end pop;
                 function not_empty(the_fifo : in out fifo_type) return boolean is
                 begin 
@@ -72,86 +66,196 @@ procedure l7 is
                 ada.text_io.put_line("");
             end print; end stdout;
             
-            procedure determine_action(id, s_id, e_id, size : in integer; q : in out fifo_type, inv : in boolean) is
+            function inv(d : in boolean; id : in integer) return integer is
+            begin if not d then return p - id + 1; else return id; end if; end inv;
+            function inc(d : in boolean) return integer is
+            begin if d then return +1; else return -1; end if; end inc;
+            procedure determine_action(id, s_id, e_id, size : in integer; q : in out fifo_type; d : in boolean; c : in boolean) is
                 t_id : integer;
                 temp : sync;
             begin
-                if (id >= s_id) and (id <= e_id) then
+                if (inv(d, id) >= s_id) and (inv(d, id) <= e_id) then
                     temp.this_id := id;
-                    temp.with_id := id - 1;
-                    temp.size := size / 2;
-                    temp.dir := false;
                     if (e_id - s_id < 4) and (e_id - s_id > 2) then
-                        if (id = s_id) then
-                            temp.with_id := id + 1;
-                            temp.size := size * (e_id - id - 0) / (e_id - s_id + 1);
+                        if (inv(d, id) = s_id) then
+                            temp.with_id := id + inc(d);
+                            temp.size := size * (e_id - inv(d, id) - 0) / (e_id - s_id + 1);
                             temp.dir := true;
                             q.push(temp);
-                        elsif (id = e_id) then
-                            temp.size := size * (e_id - id + 1) / (e_id - s_id + 1);
+                        elsif (inv(d, id) = e_id) then
+                            temp.with_id := id - inc(d);
+                            temp.size := size * (e_id - inv(d, id) + 1) / (e_id - s_id + 1);
+                            temp.dir := false;
                             q.push(temp);
                         else
-                            temp.size := size * (e_id - id + 1) / (e_id - s_id + 1);
-                            q.push(temp);
-                            temp.with_id := id + 1;
-                            temp.size := size * (e_id - id - 0) / (e_id - s_id + 1);
+                            temp.with_id := id + inc(d);
+                            temp.size := size * (e_id - inv(d, id) - 0) / (e_id - s_id + 1);
                             temp.dir := true;
+                            q.push(temp);
+                            temp.with_id := id - inc(d);
+                            temp.size := size * (e_id - inv(d, id) + 1) / (e_id - s_id + 1);
+                            temp.dir := false;
                             q.push(temp);
                         end if;
                     else
                         t_id := (e_id + s_id) / 2;
-                        if (id = s_id) then
-                            temp.with_id := t_id + 1;
+                        if (inv(d, id) = s_id) then
+                            temp.with_id := t_id + inc(d);
+                            temp.size := size / 2;
                             temp.dir := true;
                             q.push(temp);
-                        elsif id = t_id + 1 then
+                        elsif inv(d, id) = t_id + inc(d) then
                             temp.with_id := s_id;
+                            temp.size := size / 2;
+                            temp.dir := false;
                             q.push(temp);
                         end if;
-                        determine_action(id, s_id, t_id, size / 2, q);
-                        determine_action(id, t_id + 1, e_id, size / 2, q);
+                        determine_action(id, s_id, t_id, size / 2, q, d, c);
+                        determine_action(id, t_id + 1, e_id, size / 2, q, d, c);
                     end if;
                 end if;
             end determine_action;
 			
 			procedure task_start is 
-                task type task_type (id, ids : integer) is 
+                task type task_type (id : integer) is
+                    entry number_sync(v : in float);
                     entry vector_sync(v : in vector);
+                    entry data_r_to_l_sync(v0 : in float; v1, v2 : in vector; v3 : in matrix);
+                    entry data_l_to_r_sync(v0 : in float; v1 : in matrix);
                 end task_type;
                 type task_pointer is access task_type;
 				task_array : array (1..p) of task_pointer;
                 task body task_type is
-                    q : fifo_type;
-                    t : sync;
-                begin
-					--ada.text_io.put("Task #");
-                    --integer_io.put(id, width => 0);
-                    --ada.text_io.put_line(" was initialized.");
+			        a : vector;
+                    b, c, d, t : vector;
+                    mo, ms : matrix;
+                    e : float;
+                    f : float;
 
+                    fin : positive;
+                    q : fifo_type;
+                    tmp : sync;
+                    temp : float;
+                begin
+                    if id = p then fin := n; else fin := size * id; end if;
+					ada.text_io.put("Task #");
+                    integer_io.put(id, width => 0);
+                    ada.text_io.put_line(" was initialized.");
+
+                    clear_vector(a);
                     if id = 1 then
-                        --b := fill_vector;
-                        --e := get_scalar;
-                        --ms := fill_matrix;
-                        clear_vector(a);
+                        b := fill_vector(1.0);
+                        e := 1.0;
+                        ms := fill_matrix(1.0);
                         for i in 1..n loop 
                             set(i, float(i), a);
                         end loop;
-                    elsif id = ids then
-                        --c := fill_vector;
-                        --d := fill_vector;
-                        --t := fill_vector;
-                        --mo := fill_matrix;
+                    elsif id = p then
+                        c := fill_vector(1.0);
+                        d := fill_vector(1.0);
+                        t := fill_vector(1.0);
+                        mo := fill_matrix(1.0);
                         null;
                     end if;
 
-                    determine_action(id, 1, p, n, q);
+                    determine_action(id, 1, p, n, q, true, false);
                     while q.not_empty loop
-                        q.pop(t);
-                        if (t.dir) then
-                            stdout.print(t);
-                            task_array(t.with_id).vector_sync(a);
+                        q.pop(tmp);
+                        if (tmp.dir) then
+                            stdout.print(tmp);
+                            task_array(tmp.with_id).vector_sync(b);
                         else
-                            stdout.print(t);
+                            stdout.print(tmp);
+                            accept vector_sync(v : in vector) do
+                                b := v;
+                            end vector_sync;
+                        end if;
+                    end loop;
+                    determine_action(id, 1, p, n, q, false, false);
+                    while q.not_empty loop
+                        q.pop(tmp);
+                        if (tmp.dir) then
+                            stdout.print(tmp);
+                            task_array(tmp.with_id).vector_sync(c);
+                        else
+                            stdout.print(tmp);
+                            accept vector_sync(v : in vector) do
+                                c := v;
+                            end vector_sync;
+                        end if;
+                    end loop;
+                    f := 0.0;
+                    if fin /= 0 then
+                        for i in size * (id - 1) + 1 .. fin loop
+                            f := f + get(i, b) * get(i, c);
+                        end loop;
+                    end if;
+                    
+                    determine_action(id, 1, p, n, q, true, true);
+                    while q.not_empty loop
+                        q.pop(tmp);
+                        if (tmp.dir) then
+                            stdout.print(tmp);
+                            task_array(tmp.with_id).number_sync(f);
+                        else
+                            stdout.print(tmp);
+                            accept number_sync(v : in float) do
+                                f := f + v;
+                            end number_sync;
+                        end if;
+                    end loop;
+                    
+                    determine_action(id, 1, p, n, q, true, false);
+                    while q.not_empty loop
+                        q.pop(tmp);
+                        if (tmp.dir) then
+                            stdout.print(tmp);
+                            task_array(tmp.with_id).data_l_to_r_sync(e, ms);
+                        else
+                            stdout.print(tmp);
+                            accept data_l_to_r_sync(v0 : in float; v1 : in matrix) do
+                                e := v0;
+                                ms := v1;
+                            end data_l_to_r_sync;
+                        end if;
+                    end loop;
+                    determine_action(id, 1, p, n, q, false, false);
+                    while q.not_empty loop
+                        q.pop(tmp);
+                        if (tmp.dir) then
+                            stdout.print(tmp);
+                            task_array(tmp.with_id).data_r_to_l_sync(f, d, t, mo);
+                        else
+                            stdout.print(tmp);
+                            accept data_r_to_l_sync(v0 : in float; v1, v2 : in vector; v3 : in matrix) do
+                                f := v0;
+                                d := v1;
+                                t := v2;
+                                mo := v3;
+                            end data_r_to_l_sync;
+                        end if;
+                    end loop;
+                    
+                    if fin /= 0 then
+                        for i in size * (id - 1) + 1 .. fin loop
+                            for j in 1..n loop
+                                temp := 0.0;
+                                for k in 1..n loop
+                                    temp := temp + get(i, k, mo) * get(k, j, ms);
+                                end loop;
+                                set(i, get(i, a) + temp * get(i, t), a);
+                            end loop;
+                            set(i, get(i, d) * f + get(i, a) * e, a);
+                        end loop;
+                    end if;
+                    determine_action(id, 1, p, n, q, false, true);
+                    while q.not_empty loop
+                        q.pop(tmp);
+                        if (tmp.dir) then
+                            stdout.print(tmp);
+                            task_array(tmp.with_id).vector_sync(a);
+                        else
+                            stdout.print(tmp);
                             accept vector_sync(v : in vector) do
                                 a := v;
                             end vector_sync;
@@ -159,20 +263,21 @@ procedure l7 is
                     end loop;
 
                     if id = 16 then
-                        --if n < 10 then
-                            --ada.text_io.put_line("Result of the calculations:");
+                        if n < 10 then
+                            ada.text_io.put_line("Result of the calculations:");
                             put_vector(a);
-                        --end if;
+                        end if;
+                        null;
                     end if;
 
-					--ada.text_io.put("Task #");
-                    --integer_io.put(id, width => 0);
-                    --ada.text_io.put_line(" was finished.");
+					ada.text_io.put("Task #");
+                    integer_io.put(id, width => 0);
+                    ada.text_io.put_line(" was finished.");
                 end task_type;
 			begin
                 begin
                     for i in 1..p loop
-                        task_array(i) := new task_type(id => i, ids => p);
+                        task_array(i) := new task_type(id => i);
                     end loop;
                 end;
 			end task_start;
