@@ -1,0 +1,16 @@
+cmake_minimum_required(VERSION 3.8)
+project (Lab)
+set(CMAKE_BUILD_TYPE Release)
+add_executable(Lab8 Lab8.cpp)
+
+find_package (Threads)
+target_link_libraries(Lab8 ${CMAKE_THREAD_LIBS_INIT})
+
+find_package(MPI)
+IF(MPI_CXX_FOUND)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${MPI_CXX_FLAGS} -std=c++17")
+    include_directories("${MPI_CXX_INCLUDE_PATH}")
+    target_link_libraries(Lab8 "${MPI_CXX_LIBRARIES}")
+    set_target_properties(Lab8 PROPERTIES COMPILE_FLAGS "${MPI_COMPILE_FLAGS} -std=c++1z")
+    set_target_properties(Lab8 PROPERTIES LINK_FLAGS "${MPI_LINK_FLAGS}")
+ENDIF()
