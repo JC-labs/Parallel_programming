@@ -32,10 +32,10 @@ int main() {
 		std::ifstream fn;
 		fn.open("data/n.txt");
 		fn >> n;
-		z.resize(n); mo.resize(n); mt.resize(n); mr.resize(n);
-		read_file("data/input.txt", z, mo, mt, mr, e);
 	}
 	MPI_Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD);
+	z.resize(n); mo.resize(n); mt.resize(n); mr.resize(n); ma.resize(n);
+	if (id == 0) read_file("data/input.txt", z, mo, mt, mr, e);
 	size = n / p;
 
 	MPI_Group group;
@@ -62,84 +62,43 @@ int main() {
 	MPI_Graph_create(MPI_COMM_WORLD, topology_size, indices, edges, false, &graph_comm);
 	MPI_Comm_group(graph_comm, &group);
 
-	//MPI_Intercomm_create(graph_comm, 0, )
-
 	std::cout << "Process #" << id << " has been initialized.\n";
 	if (n >= p) {
 		number *z_l = new number[size];
-		//z.resize(size);
-		//MPI_Scatter((void*) z.data(), n, MPI_FLOAT, MPI_IN_PLACE, size, MPI_FLOAT, 0, MPI_COMM_WORLD);
-		if (id == 0)
-			MPI_Scatter((void*) z.data(), n, MPI_FLOAT, z_l, size, MPI_FLOAT, 0, MPI_COMM_WORLD);
-		else {
-			//z.resize(size);
-			MPI_Scatter(MPI_IN_PLACE, n, MPI_FLOAT, z_l, size, MPI_FLOAT, 0, MPI_COMM_WORLD);
+		MPI_Scatter(z.data(), size, MPI_FLOAT, z_l, size, MPI_FLOAT, 0, graph_comm);
+
+		number b_l = std::numeric_limits<number>::min();
+		for (int i = 0; i < size; i++)
+			if (b_l < z_l[i]) b_l = z_l[i];
+		MPI_Reduce(&b_l, &b, 1, MPI_FLOAT, MPI_MAX, 0, graph_comm);
+
+		mr.resize(n);
+		MPI_Bcast(&b, 1, MPI_FLOAT, 0, graph_comm);
+		MPI_Bcast(&e, 1, MPI_FLOAT, 0, graph_comm);
+		MPI_Bcast(mr.data(), n * n, MPI_FLOAT, 0, graph_comm);
+		
+		matrix mo_l, mt_l; mo_l.resize(n, size); mt_l.resize(n, size);
+		MPI_Scatter(mo.data(), size * n, MPI_FLOAT, mo_l.data(), size * n, MPI_FLOAT, 0, graph_comm);
+		MPI_Scatter(mt.data(), size * n, MPI_FLOAT, mt_l.data(), size * n, MPI_FLOAT, 0, graph_comm);
+
+		matrix ma_l; ma_l.resize(n, size);
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < n; j++) {
+				number temp = 0;
+				for (int k = 0; k < n; k++)
+					temp += mt_l[i][k] * mr[k][j];
+				ma_l[i][j] += temp;
+			}
+			for (int j = 0; j < n; j++)
+				ma_l[i][j] = ma_l[i][j] * e + mo_l[i][j] * b;
 		}
-		//MPI_Bcast(z.data(), n, MPI_FLOAT, 0, graph_comm);
-		std::cout << "My local Z is ";
-		for (int i = 0; i < size; i++)/*/(auto it : z)*/
-			std::cout << z_l[i]/*/it*/ << '\t';
-		std::cout << std::endl;
+
+		MPI_Gather(ma_l.data(), size * n, MPI_FLOAT, ma.data(), size * n, MPI_FLOAT, 0, graph_comm);
+		if (id == 0) write_file(ma, std::cout);
 	}
 
 	std::cout << "Process #" << id << " has been finished.\n";
 	MPI_Comm_free(&graph_comm);
 	MPI_Finalize();
-	/*
-	int n;
-	std::ifstream fn;
-	fn.open("data/n.txt");
-	fn >> n;
-	Memory m(n, 6);
-
-	omp_set_dynamic(0);
-	#pragma omp parallel num_threads(m.p)
-	{
-		int id = omp_get_thread_num();
-		std::cout << "Thread #" << id + 1 << " has been initialized.\n";
-		if (id == 0) read_file("data/input_0.txt", m.e, m.mk);
-		if (id == 2) read_file("data/input_1.txt", m.z, m.mo);
-		if (id == 5) read_file("data/input_2.txt", m.t, m.mr);
-
-		#pragma omp barrier
-
-		number b = std::numeric_limits<number>::min();
-		#pragma omp for nowait
-		for (int i = m.size * id; i < m.size * (id + 1); i++)
-			if (b < m.z[i]) b = m.z[i];
-		#pragma omp critical(min)
-		{
-			if (b < m.b) m.b = b;
-		}
-
-		vector t(n);
-		omp_set_lock(&m.mutex);
-		std::copy(m.t.begin(), m.t.end(), t.begin());
-		omp_unset_lock(&m.mutex);
-
-		#pragma omp for collapse(2)
-		for (int i = m.size * id; i < m.size * (id + 1); i++)
-			for (int j = 0; j < m.size; j++)
-				m.c[i] += m.t[j] * m.mo[i][j];
-
-		#pragma omp atomic read
-			b = m.b;
-		number temp;
-		#pragma omp for
-		for (int i = m.size * id; i < m.size * (id + 1); i++) {
-			for (int j = 0; j < m.n; j++) {
-				temp = 0;
-				for (int k = 0; k < m.n; k++)
-					temp += m.mk[i][k] * m.mr[k][j];
-				m.a[i] += temp * m.c[j];
-			}
-			m.a[i] = m.a[i] + m.e[i] * b;
-		}
-
-		if (id == 2) write_file("data/output.txt", m.a);
-
-		std::cout << "Thread #" << id + 1 << " has been resolved.\n";
-	}
 	return 0;
-	*/
 }
